@@ -1,0 +1,67 @@
+
+================================================================================
+MIGRAINEMAMBA - MODEL COMPARISON REPORT
+================================================================================
+Generated: 2025-11-17 19:55:32
+
+PERFORMANCE RESULTS (Ranked by AUC-ROC)
+--------------------------------------------------------------------------------
+
+2. LightGBM
+   AUC-ROC:   0.7597
+   Accuracy:  0.8278
+   Precision: 0.8531
+   Recall:    0.9470
+   F1-Score:  0.8976
+
+3. CatBoost
+   AUC-ROC:   0.7560
+   Accuracy:  0.8206
+   Precision: 0.8462
+   Recall:    0.9470
+   F1-Score:  0.8938
+
+1. XGBoost
+   AUC-ROC:   0.7515
+   Accuracy:  0.8186
+   Precision: 0.8459
+   Recall:    0.9444
+   F1-Score:  0.8924
+
+4. Random Forest
+   AUC-ROC:   0.7437
+   Accuracy:  0.8144
+   Precision: 0.8138
+   Recall:    0.9948
+   F1-Score:  0.8952
+
+5. Logistic Regression
+   AUC-ROC:   0.7427
+   Accuracy:  0.8320
+   Precision: 0.8419
+   Recall:    0.9715
+   F1-Score:  0.9021
+
+CROSS-VALIDATION RESULTS
+--------------------------------------------------------------------------------
+XGBoost             : 0.7758 ± 0.0147
+LightGBM            : 0.7770 ± 0.0168
+CatBoost            : 0.7852 ± 0.0157
+Random Forest       : 0.7691 ± 0.0237
+Logistic Regression : 0.7440 ± 0.0335
+
+BEST MODEL
+--------------------------------------------------------------------------------
+LightGBM
+Test AUC: 0.7597
+CV AUC: 0.7770 ± 0.0168
+
+FOR YOUR PAPER
+--------------------------------------------------------------------------------
+"We evaluated five machine learning algorithms (XGBoost, LightGBM, 
+CatBoost, Random Forest, and Logistic Regression) using 5-fold 
+stratified cross-validation. LightGBM achieved the highest 
+performance with AUC-ROC of 0.7597 on the 
+test set and 0.7770 ± 0.0168 
+in cross-validation."
+================================================================================

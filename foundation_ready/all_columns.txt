@@ -1,0 +1,672 @@
+   1. sex
+   2. Age at first visit
+   3. height
+   4. body weight
+   5. BMI
+   6. sleep time
+   7. Age at onset
+   8. Frequency: Months
+   9. Properties Tightening
+  10. Characteristics: Throat
+  11. Both pain
+  12. temporal pain
+  13. Occipital pain
+  14. VAS
+  15. Varies depending on the change date
+  16. Need to tolerate obstacles
+  17. Aggravating factor: Shaking your head
+  18. Aggravating factors: Worsening weather
+  19. Accompanying symptoms: nausea
+  20. Accompanying symptoms: stiff shoulders and neck
+  21. No prodromal symptoms
+  22. Solution: Lie down
+  23. Applicable Child motion sickness
+  24. Applicable: Lack of exercise
+  25. MOH Headache upon waking up
+  26. HIT6SUM
+  27. GAD1
+  28. GAD2
+  29. GAD3
+  30. GAD4
+  31. GAD5
+  32. GAD6
+  33. GAD 7
+  34. GAD8
+  35. GAD7SUM
+  36. PHQ1
+  37. PHQ2
+  38. PHQ3
+  39. PHQ4
+  40. PHQ5
+  41. PHQ6
+  42. PHQ7
+  43. PHQ8
+  44. PHQ 9
+  45. PHQ10
+  46. PHQSUM
+  47. Allodynia Comb
+  48. Allodynia Tying
+  49. Allodynia beard
+  50. Allodynia glasses
+  51. Allodynia Contact Lenses
+  52. Allodynia Earrings
+  53. Allodynia Necklace
+  54. Allodynia clothing
+  55. Allodynia shower
+  56. Allodynia pillow
+  57. Allodynia fever
+  58. Allodynia
+  59. Allodynia score SUM
+  60. HIT6 1
+  61. HIT6 2
+  62. HIT6 3
+  63. HIT6 4
+  64. HIT6 5
+  65. HIT6 6
+  66. MIDAS 1A
+  67. MIDAS 1B
+  68. MIDAS 2A
+  69. MIDAS 2B
+  70. MIDAS 3A
+  71. MIDAS 3B
+  72. MIDAS 4A
+  73. MIDAS 4B
+  74. MIDAS 5
+  75. Diagnosis 1_1.1 Migraine without aura
+  76. Diagnosis 1_1.1 Migraine without aura and migraine with aura
+  77. Diagnosis 1_1.2 Migraine with aura
+  78. Diagnosis 1_1.2 Migraine with aura (isolated hemiplegic migraine)
+  79. Diagnosis 1_1.2 Migraine without aura
+  80. Diagnosis 1_1.2 Suspected migraine with aura
+  81. Diagnosis 1_1.21.2 Typical aura without headache
+  82. Diagnosis 1_1.23.11 Familial hemiplegic migraine type 1
+  83. Diagnosis 1_1.3 Chronic migraine
+  84. Diagnosis 1_1.5 Suspected migraine
+  85. Diagnosis 1_1.51 Suspected migraine with aura
+  86. Diagnosis 1_1.51 Suspected migraine without aura
+  87. Diagnosis 1_1.52 Suspected migraine with aura
+  88. Diagnosis 1_11.21 Cervicogenic headache
+  89. Diagnosis 1_11.4 Headaches due to ear disorders
+  90. Diagnosis 1_11.51 Headache due to acute rhinosinusitis
+  91. Diagnosis 1_11.51 Headache due to acute sinusitis
+  92. Diagnosis 1_11.52 Headache due to chronic/recurrent rhinosinusitis
+  93. Diagnosis 1_11.6 Headache due to dental problems
+  94. Diagnosis 1_11.7 Headaches due to temporomandibular joint disorders
+  95. Diagnosis 1_13. Postherpetic neuralgia
+  96. Diagnosis 1_13. Right nonspecific facial pain
+  97. Diagnosis 1_13.4 Occipital neuralgia
+  98. Diagnosis 1_13.4 Occipital neuralgia (suspected)
+  99. Diagnosis 1_13.4 Suspected occipital neuralgia
+ 100. Diagnosis 1_13.5 Persistent idiopathic facial pain
+ 101. Diagnosis 1_2.1 Infrequent episodic tension-type headache
+ 102. Diagnosis 1_2.2 Frequent episodic tension-type headaches
+ 103. Diagnosis 1_2.2 Suspected frequent repetitive tension type
+ 104. Diagnosis 1_2.3 Chronic tension headache
+ 105. Diagnosis 1_2.4 Suspected tension headache
+ 106. Diagnosis 1_2.41 Suspected frequent episodic tension-type headache
+ 107. Diagnosis 1_2.41 Suspected infrequent episodic tension-type headache
+ 108. Diagnosis 1_2.42 Suspected frequent episodic tension-type headache
+ 109. Diagnosis 1_2.42 Suspected frequent recurrent tension-type headache
+ 110. Diagnosis 1_2.42 Suspected frequent tension-type headache
+ 111. Diagnosis 1_2.42 Suspected infrequent episodic tension-type headache
+ 112. Diagnosis 1_2.43 Suspected chronic tension-type headache
+ 113. Diagnosis 1_3. Trigeminal/autonomic headaches
+ 114. Diagnosis 1_3.1 Cluster headaches
+ 115. Diagnosis 1_3.11 Episodic cluster headache
+ 116. Diagnosis 1_3.11 Suspected episodic cluster headache
+ 117. Diagnosis 1_3.5 Suspected trigeminal/autonomic headache
+ 118. Diagnosis 1_3.51 Suspected cluster headache
+ 119. Diagnosis 1_4. Other primary headache disorders
+ 120. Diagnosis 1_4. Other primary headache disorders (primary cough headache)
+ 121. Diagnosis 1_4.1 Primary cough headache
+ 122. Diagnosis 1_4.2 Primary exercise headache
+ 123. Diagnosis 1_4.2 Temporary exercise headache
+ 124. Diagnosis 1_4.21 Suspected primary exercise headache
+ 125. Diagnosis 1_4.7 Primary stabbing headache
+ 126. Diagnosis 1_4.8 Nummular headache
+ 127. Diagnosis 1_5. Headache due to head and neck trauma or injury
+ 128. Diagnosis 1_5.1 Acute headache due to head trauma 1.1 Migraine without aura
+ 129. Diagnosis 1_5.12 Suspected acute headache due to minor head trauma
+ 130. Diagnosis 1_5.22 Persistent headache due to mild head injury
+ 131. Diagnosis 1_6. Headache due to craniocervical vascular disorder cannot be ruled out
+ 132. Diagnosis 1_6. Headache due to craniocervical vascular disorders
+ 133. Diagnosis 1_6. Headache due to craniocervical vascular disorders ( Suspected headache due to pituitary apoplexy)
+ 134. Diagnosis 1_6.5 Persistent headache due to craniotomy
+ 135. Diagnosis 1_6.73 Headache due to drug-induced cerebral vasoconstriction syndrome
+ 136. Diagnosis 1_6.73 Headache due to reversible cerebral spasm syndrome
+ 137. Diagnosis 1_6.73 Headache due to reversible cerebral vasoconstriction syndrome
+ 138. Diagnosis 1_6.73.2 Suspected acute headache due to reversible cerebral vasoconstriction syndrome
+ 139. Diagnosis 1_8. Substance-related or withdrawal-related headaches
+ 140. Diagnosis 1_8.19 Headache due to primary use of medication other than headache medication
+ 141. Diagnosis 1_8.19 Headache due to temporary use of medication other than headache medication
+ 142. Diagnosis 1_8.19 Suspected headache due to primary use of medication other than headache medication
+ 143. Diagnosis 1_8.25 Complex analgesic-overuse headache
+ 144. Diagnosis 1_9. Headaches due to infections
+ 145. Diagnosis 1_9.12.1 Headache due to viral meningitis
+ 146. Diagnosis 1_9.21 Headache due to systemic bacterial infection
+ 147. Diagnosis 1_9.22.1 Suspected acute headache due to systemic viral infection
+ 148. Diagnosis 1_Acoustic neuroma
+ 149. Diagnosis 1_After surgery for subarachnoid hemorrhage
+ 150. Diagnosis 1_Anterior cerebral artery occlusion
+ 151. Diagnosis 1_Bilateral chronic subdural hematoma
+ 152. Diagnosis 1_Cervicogenic headache
+ 153. Diagnosis 1_Left persistent idiopathic facial pain
+ 154. Diagnosis 1_Left trigeminal neuralgia
+ 155. Diagnosis 1_Neuropathic pain
+ 156. Diagnosis 1_Orthostatic intolerance
+ 157. Diagnosis 1_Peripheral dizziness
+ 158. Diagnosis 1_Pituitary adenoma
+ 159. Diagnosis 1_Primary cough headache
+ 160. Diagnosis 1_Right cerebellar infarction
+ 161. Diagnosis 1_Right chronic subdural hematoma
+ 162. Diagnosis 1_Subarachnoid hemorrhage
+ 163. Diagnosis 1_Suspected episodic cluster headache
+ 164. Diagnosis 1_Suspected headache caused by shingles
+ 165. Diagnosis 1_Suspected headache caused by temporary use of medication other than headache medication
+ 166. Diagnosis 1_Suspected left transverse sinus and sigmoid sinus thrombosis
+ 167. Diagnosis 1_Suspected left transverse sinus thrombosis
+ 168. Diagnosis 1_Suspected migraine without aura
+ 169. Diagnosis 1_Suspected occipital neuralgia
+ 170. Diagnosis 1_Suspected orthostatic intolerance
+ 171. Diagnosis 1_Suspected pituitary apoplexy
+ 172. Diagnosis 1_Suspected reversible cerebral vasoconstriction syndrome
+ 173. Diagnosis 1_Suspected right brain tumor
+ 174. Diagnosis 1_Suspected sinusitis
+ 175. Diagnosis 1_Suspicion of RCVS
+ 176. Diagnosis 1_Temporary stabbing headache
+ 177. Diagnosis 1_Transient ischemic attack
+ 178. Diagnosis 1_Unclassifiable. no autonomic pathology. suspected TACS
+ 179. Diagnosis 1_flash scotoma
+ 180. Diagnosis 1_head injury
+ 181. Diagnosis 1_psychosomatic disorders
+ 182. Diagnosis 1_sinusitis
+ 183. Diagnosis 1_trauma
+ 184. introduction_can be
+ 185. Dominant hand_0
+ 186. Dominant hand_left
+ 187. Dominant hand_right
+ 188. drinking_0
+ 189. drinking_Occasional drinking
+ 190. drinking_habitual
+ 191. smoking_0
+ 192. smoking_In the past
+ 193. smoking_Passive smoking available
+ 194. smoking_Unknown
+ 195. Bedtime_00:00
+ 196. Bedtime_00:30
+ 197. Bedtime_01:00
+ 198. Bedtime_01:30
+ 199. Bedtime_02:00
+ 200. Bedtime_02:30
+ 201. Bedtime_03:00
+ 202. Bedtime_03:30
+ 203. Bedtime_04:00
+ 204. Bedtime_04:10
+ 205. Bedtime_05:00
+ 206. Bedtime_06:00
+ 207. Bedtime_06:30
+ 208. Bedtime_07:00
+ 209. Bedtime_08:00
+ 210. Bedtime_08:30
+ 211. Bedtime_09:00
+ 212. Bedtime_09:30
+ 213. Bedtime_10:00
+ 214. Bedtime_10:30
+ 215. Bedtime_10:45
+ 216. Bedtime_11:00
+ 217. Bedtime_11:30
+ 218. Bedtime_12:00
+ 219. Bedtime_15:00
+ 220. Bedtime_18:00
+ 221. Bedtime_20:00
+ 222. Bedtime_20:30
+ 223. Bedtime_21:00
+ 224. Bedtime_21:30
+ 225. Bedtime_21:40
+ 226. Bedtime_22:00
+ 227. Bedtime_22:30
+ 228. Bedtime_22:50
+ 229. Bedtime_23:00
+ 230. Bedtime_23:30
+ 231. Bedtime_23:40
+ 232. Bedtime_23:45
+ 233. Wake up time_00:00
+ 234. Wake up time_00:458333333
+ 235. Wake up time_01:00
+ 236. Wake up time_01:30
+ 237. Wake up time_02:00
+ 238. Wake up time_02:40
+ 239. Wake up time_03:00
+ 240. Wake up time_03:30
+ 241. Wake up time_04:00
+ 242. Wake up time_04:30
+ 243. Wake up time_04:40
+ 244. Wake up time_04:45
+ 245. Wake up time_04:50
+ 246. Wake up time_05:00
+ 247. Wake up time_05:15
+ 248. Wake up time_05:20
+ 249. Wake up time_05:25
+ 250. Wake up time_05:30
+ 251. Wake up time_05:40
+ 252. Wake up time_05:45
+ 253. Wake up time_05:50
+ 254. Wake up time_06:00
+ 255. Wake up time_06:05
+ 256. Wake up time_06:15
+ 257. Wake up time_06:20
+ 258. Wake up time_06:25
+ 259. Wake up time_06:30
+ 260. Wake up time_06:40
+ 261. Wake up time_06:45
+ 262. Wake up time_06:50
+ 263. Wake up time_07:00
+ 264. Wake up time_07:15
+ 265. Wake up time_07:20
+ 266. Wake up time_07:30
+ 267. Wake up time_07:40
+ 268. Wake up time_07:45
+ 269. Wake up time_07:50
+ 270. Wake up time_08:00
+ 271. Wake up time_08:20
+ 272. Wake up time_08:30
+ 273. Wake up time_08:50
+ 274. Wake up time_09:00
+ 275. Wake up time_09:30
+ 276. Wake up time_10:00
+ 277. Wake up time_10:30
+ 278. Wake up time_11:00
+ 279. Wake up time_12:00
+ 280. Wake up time_13:00
+ 281. Wake up time_13:30
+ 282. Wake up time_14:00
+ 283. Wake up time_15:00
+ 284. Wake up time_16:00
+ 285. Wake up time_18:00
+ 286. Wake up time_21:00
+ 287. Wake up time_22:30
+ 288. Wake up time_23:00
+ 289. Schooling/employment_Unknown
+ 290. Schooling/employment details_Full-time
+ 291. Schooling/employment details_Part-time
+ 292. Schooling/employment details_Unknown
+ 293. Schooling/employment details_student
+ 294. Onset time: 1 week_1
+ 295. Onset time: 1 week_Nothing
+Yes
+ 296. History of headaches_can be
+ 297. Usual parts_both sides
+ 298. Usual parts_one side
+ 299. Taking headache medicine_y
+ 300. Medication Over-the-counter medicines_1
+ 301. Medication Over-the-counter medicines_Yes
+Nothing
+ 302. Medication name_Acetaminophen
+ 303. Medication name_Acetaminophen K
+ 304. Medication name_Acetaminophen Loxonin
+ 305. Medication name_Acetaminophen tablets
+ 306. Medication name_Acetaminophen, Loxonin
+ 307. Medication name_Acetaminophen, liatriptan
+ 308. Medication name_Acetaminophen, zolmitriptan
+ 309. Medication name_Adam
+ 310. Medication name_Adam A
+ 311. Medication name_Adam A Tablets
+ 312. Medication name_Agente Pain Reliever
+ 313. Medication name_Alinamin
+ 314. Medication name_Allende
+ 315. Medication name_Amagi
+ 316. Medication name_Amagi Loxonin
+ 317. Medication name_Amagi, Calonal
+ 318. Medication name_Amagi, Imigran
+ 319. Medication name_Amagi, Loxonin, SG
+ 320. Medication name_Aneron
+ 321. Medication name_Baforin Luna
+ 322. Medication name_Bavarian Aspirin, Bufferin
+ 323. Medication name_Beneslon, Eve
+ 324. Medication name_Benza Block
+ 325. Medication name_Benzablock, Eve
+ 326. Medication name_Bontal, rizatriptan
+ 327. Medication name_Bright green
+ 328. Medication name_Brufen
+ 329. Medication name_Brufen, Acetaminophen, Calonal
+ 330. Medication name_Brufen, Calonal
+ 331. Medication name_Buffali
+ 332. Medication name_Buffer Inn
+ 333. Medication name_Bufferin
+ 334. Medication name_Bufferin A
+ 335. Medication name_Bufferin A, Bufferin Premium, Loxoprofen
+ 336. Medication name_Bufferin Bufferin Luna Eye
+ 337. Medication name_Bufferin Calonal
+ 338. Medication name_Bufferin DX
+ 339. Medication name_Bufferin EX
+ 340. Medication name_Bufferin EX, Dipacio 1pa
+ 341. Medication name_Bufferin Eve Calonal
+ 342. Medication name_Bufferin Eve Quick
+ 343. Medication name_Bufferin Loxonin
+ 344. Medication name_Bufferin Luna
+ 345. Medication name_Bufferin Luna Eye
+ 346. Medication name_Bufferin Luna Junior
+ 347. Medication name_Bufferin Luna for Juniors
+ 348. Medication name_Bufferin Luna,
+ 349. Medication name_Bufferin Luna, Beneslon
+ 350. Medication name_Bufferin Luna, Calonal
+ 351. Medication name_Bufferin Luna, Calonal, Eve, Loxonin
+ 352. Medication name_Bufferin Luna, Loxonin
+ 353. Medication name_Bufferin Luna, Nabolin S
+ 354. Medication name_Bufferin Premium
+ 355. Medication name_Bufferin Premium DX
+ 356. Medication name_Bufferin Premium Noshin Eve
+ 357. Medication name_Bufferin Premium, Acetaminophen
+ 358. Medication name_Bufferin Premium, Calonal
+ 359. Medication name_Bufferin Premium, Eve Quick
+ 360. Medication name_Bufferin Premium, Eve Quick, Wrinkle Ivy
+ 361. Medication name_Bufferin Premium, Loxonin
+ 362. Medication name_Bufferin Premium, Loxonin, Calonal
+ 363. Medication name_Bufferin Premium, Loxoprofen
+ 364. Medication name_Bufferin Premium, Sedes
+ 365. Medication name_Bufferin Premium, Teilac, Eve Quick
+ 366. Medication name_Bufferin Premium, Zukkinon
+ 367. Medication name_Bufferin Zolmitriptan
+ 368. Medication name_Bufferin or Eve
+ 369. Medication name_Bufferin, Amagi
+ 370. Medication name_Bufferin, Amagi, Maxalt
+ 371. Medication name_Bufferin, Calonal
+ 372. Medication name_Bufferin, Calonal, Loxonin
+ 373. Medication name_Bufferin, Contact
+ 374. Medication name_Bufferin, Ebuquick, Loxoprofen
+ 375. Medication name_Bufferin, Eletriptan, Loxonin
+ 376. Medication name_Bufferin, Eve
+ 377. Medication name_Bufferin, Eve Quick
+ 378. Medication name_Bufferin, Eve Quick, Calonal, Loxonin
+ 379. Medication name_Bufferin, Eve Quick, Kewpie Kowai
+ 380. Medication name_Bufferin, Eve, Loxonin
+ 381. Medication name_Bufferin, Eve, Loxonin, Calonal, Nalon Ace
+ 382. Medication name_Bufferin, Eve, Noshin
+ 383. Medication name_Bufferin, Eve, Sedes, Loxonin, Noshin Pure
+ 384. Medication name_Bufferin, Ibuprofen
+ 385. Medication name_Bufferin, Kakkonto
+ 386. Medication name_Bufferin, Kerorin
+ 387. Medication name_Bufferin, Kiagard
+ 388. Medication name_Bufferin, Loxonin
+ 389. Medication name_Bufferin, Loxonin, Calonal
+ 390. Medication name_Bufferin, Loxonin, Rizatriptan
+ 391. Medication name_Bufferin, Loxonin, etc.
+ 392. Medication name_Bufferin, Loxoprofen
+ 393. Medication name_Bufferin, Luna
+ 394. Medication name_Bufferin, Maxalt
+ 395. Medication name_Bufferin, Nalon Ace
+ 396. Medication name_Bufferin, Nalon Ace, exactly
+ 397. Medication name_Bufferin, Pure
+ 398. Medication name_Bufferin, Relpax
+ 399. Medication name_Bufferin, Secion High
+ 400. Medication name_Bufferin, Sedes
+ 401. Medication name_Bufferin, Teilac
+ 402. Medication name_Bufferin, Transamin
+ 403. Medication name_Bufferin, Triptan
+ 404. Medication name_Bufferin, acetaminophen
+ 405. Medication name_Caconar
+ 406. Medication name_Calonal
+ 407. Medication name_Calonal 200 2 tablets
+ 408. Medication name_Calonal 200mg, 500mg
+ 409. Medication name_Calonal 500
+ 410. Medication name_Calonal Brufen
+ 411. Medication name_Calonal Bufferin Luna
+ 412. Medication name_Calonal Eve Brufen
+ 413. Medication name_Calonal Loxonin
+ 414. Medication name_Calonal Loxonin SG Granules
+ 415. Medication name_Calonal Loxoprofen
+ 416. Medication name_Calonal Luna Noshin
+ 417. Medication name_Calonal SG Granules
+ 418. Medication name_Calonal, Amagi
+ 419. Medication name_Calonal, Brufen
+ 420. Medication name_Calonal, Bufferin
+ 421. Medication name_Calonal, Bufferin Luna
+ 422. Medication name_Calonal, Bufferin Luna, Teilac
+ 423. Medication name_Calonal, Bufferin, Loxonin, Hakkirease
+ 424. Medication name_Calonal, Bufferin, Sumatriptan
+ 425. Medication name_Calonal, Celecoxib, Voltaren suppositories
+ 426. Medication name_Calonal, Eletriptan
+ 427. Medication name_Calonal, Eperisone
+ 428. Medication name_Calonal, Eve
+ 429. Medication name_Calonal, Eve A
+ 430. Medication name_Calonal, Eve EX
+ 431. Medication name_Calonal, Eve, Bufferin
+ 432. Medication name_Calonal, Eve, Bufferin, Nalon Ace
+ 433. Medication name_Calonal, Eve, Noshin
+ 434. Medication name_Calonal, Goreisan
+ 435. Medication name_Calonal, Goresan
+ 436. Medication name_Calonal, Goryo-san
+ 437. Medication name_Calonal, Imigran
+ 438. Medication name_Calonal, Imigran nasal spray
+ 439. Medication name_Calonal, Kakkonto
+ 440. Medication name_Calonal, Loxonin
+ 441. Medication name_Calonal, Loxonin, Eve
+ 442. Medication name_Calonal, Loxonin, Ibuprofen
+ 443. Medication name_Calonal, Loxonin, Loxoprofen
+ 444. Medication name_Calonal, Loxonin, SG Granules
+ 445. Medication name_Calonal, Loxonin, Tsumura
+ 446. Medication name_Calonal, Loxoprofen
+ 447. Medication name_Calonal, Luna
+ 448. Medication name_Calonal, Merislon
+ 449. Medication name_Calonal, Nalon Ace
+ 450. Medication name_Calonal, Naratriptan
+ 451. Medication name_Calonal, Relpax, Bufferin
+ 452. Medication name_Calonal, Rizatriptan, Loxonin
+ 453. Medication name_Calonal, S.G., Eve
+ 454. Medication name_Calonal, SG
+ 455. Medication name_Calonal, SG Granules
+ 456. Medication name_Calonal, SG, Eve, Loxonin
+ 457. Medication name_Calonal, Tylenol
+ 458. Medication name_Calonal, Voltaren, Loxonin
+ 459. Medication name_Calonal, Zolmitriptan
+ 460. Medication name_Calonal, Zolmitriptan, Amage
+ 461. Medication name_Calonal, a migraine medicine
+ 462. Medication name_Calonal, eletriptan
+ 463. Medication name_Calonal, ibuprofen
+ 464. Medication name_Calonal, rizatriptan
+ 465. Medication name_Calonal, sumatriptan
+ 466. Medication name_Cedes Premium
+ 467. Medication name_Celecoxib
+ 468. Medication name_Celecoxib (taken orally for shoulder or elbow pain)
+ 469. Medication name_Celecoxib, Eve
+ 470. Medication name_Celecoxib, EveQuick, Relpax
+ 471. Medication name_Celecoxib, eperisone, calonal
+ 472. Medication name_Celsion HD
+ 473. Medication name_Cheap medicines at the pharmacy
+ 474. Medication name_Children's Bufferin
+ 475. Medication name_Children's Bufferin, Noshin
+ 476. Medication name_Children's Bufferin, Sedes
+ 477. Medication name_Chinese herbal medicine Goryo-san
+ 478. Medication name_Chinese medicine
+ 479. Medication name_Chinese medicine goshuto
+ 480. Medication name_Clear Ace
+ 481. Medication name_Clearamine, Domperidone, Calonal
+ 482. Medication name_Clearly, Eve
+ 483. Medication name_Clearmin
+ 484. Medication name_Clearmin A
+ 485. Medication name_Clearmin, Loxonin, Calonal
+ 486. Medication name_Clearmin, Voltaren, Rizatriptan
+ 487. Medication name_Cold medicine, Calonal
+ 488. Medication name_Comfortable
+ 489. Medication name_Contains Eve Quick and SG
+ 490. Medication name_Coquart
+ 491. Medication name_Depas
+ 492. Medication name_Depas, Selene
+ 493. Medication name_Depasio IPa
+ 494. Medication name_Diclofenac
+ 495. Medication name_Diclofenac sodium
+ 496. Medication name_Diclofenac, Loxonin
+ 497. Medication name_Diclofenac, Sarasac
+ 498. Medication name_Diclofenac, eletriptan
+ 499. Medication name_Dipacio
+ 500. Medication name_Dipacio IPa
+ 501. Medication name_Dipacio P a
+ 502. Medication name_Drug name unknown
+ 503. Medication name_Drug name unknown (ibuprofen)
+ 504. Medication name_EVE
+ 505. Medication name_Ebuquick, Loxonin, Calonal, Zomic
+ 506. Medication name_Ecdoran 2A, Calonal, Loxonin
+ 507. Medication name_Echizoram
+ 508. Medication name_Eletriptan
+ 509. Medication name_Eletriptan, Calonal
+ 510. Medication name_Eletriptan, DSEP
+ 511. Medication name_Eletriptan, Eve, Nikesan
+ 512. Medication name_Eletriptan, Nalon Ace, Loxonin
+ 513. Medication name_Eletriptan, loxoprofen
+ 514. Medication name_Eletriptan, sumatriptan,
+ 515. Medication name_Eokisonin, Eve, Eletriptan
+ 516. Medication name_Eperisone celecoxib
+ 517. Medication name_Eperisone, Adehoscowa
+ 518. Medication name_Eperisone, Kakkonto
+ 519. Medication name_Eperisone, celecoxib, zolmitriptan
+ 520. Medication name_Estaque Ive
+ 521. Medication name_Etizolam SG Granules
+ 522. Medication name_Etizolam, Loxonin
+ 523. Medication name_Eve
+ 524. Medication name_Eve (previously used)
+ 525. Medication name_Eve (strong but not effective)
+ 526. Medication name_Eve A
+ 527. Medication name_Eve A Tablets
+ 528. Medication name_Eve A Tablets EX
+ 529. Medication name_Eve A, Eve Quick
+ 530. Medication name_Eve A, Loxonin
+ 531. Medication name_Eve A, Loxoprofen
+ 532. Medication name_Eve Bufferin
+ 533. Medication name_Eve Bufferin Calonal
+ 534. Medication name_Eve Calonal
+ 535. Medication name_Eve DX
+ 536. Medication name_Eve Deluxe
+ 537. Medication name_Eve EX
+ 538. Medication name_Eve Loxonin
+ 539. Medication name_Eve Naron Ace
+ 540. Medication name_Eve Premium Advil
+ 541. Medication name_Eve Quick
+ 542. Medication name_Eve Quick Calonal
+ 543. Medication name_Eve Quick DX
+ 544. Medication name_Eve Quick EX
+ 545. Medication name_Eve Quick Headache Medicine DX
+ 546. Medication name_Eve Quick Loxonin
+ 547. Medication name_Eve Quick headache medicine
+ 548. Medication name_Eve Quick, Amagi
+ 549. Medication name_Eve Quick, Bufferin
+ 550. Medication name_Eve Quick, Bufferin Luna, Ringle Ivy
+ 551. Medication name_Eve Quick, Bufferin Premium
+ 552. Medication name_Eve Quick, Calonal
+ 553. Medication name_Eve Quick, Noshin Pure
+ 554. Medication name_Eve Quick, SG
+ 555. Medication name_Eve Quick, SG Granules
+ 556. Medication name_Eve and Loxonin
+ 557. Medication name_Eve etc.
+ 558. Medication name_Eve or Calonal
+ 559. Medication name_Eve type
+ 560. Medication name_Eve, Alpitan, Loxonin
+ 561. Medication name_Eve, Aspirin, Sedes
+ 562. Medication name_Eve, Brufen
+ 563. Medication name_Eve, Bufferin
+ 564. Medication name_Eve, Bufferin Premium
+ 565. Medication name_Eve, Bufferin, Calonal
+ 566. Medication name_Eve, Bufferin, Cocal
+ 567. Medication name_Eve, Bufferin, Loxonin
+ 568. Medication name_Eve, Bufferin, Secion HD Premium
+ 569. Medication name_Eve, Bufferin, Tylenol
+ 570. Medication name_Eve, Calonal
+ 571. Medication name_Eve, Calonal, Diclofenac
+ 572. Medication name_Eve, Calonal, Loxonin
+ 573. Medication name_Eve, Clearmin
+ 574. Medication name_Eve, Dipacio, Loxonin
+ 575. Medication name_Eve, Eletriptan
+ 576. Medication name_Eve, Eve Quick
+ 577. Medication name_Eve, Eve Quick, Loxonin
+ 578. Medication name_Eve, Goryo-san
+ 579. Medication name_Eve, Goshuto
+ 580. Medication name_Eve, Loxonin
+ 581. Medication name_Eve, Loxonin, Bufferin
+ 582. Medication name_Eve, Loxonin, Calonal
+ 583. Medication name_Eve, Loxonin, Diclofenac
+ 584. Medication name_Eve, Loxonin, Loxoprofen
+ 585. Medication name_Eve, Loxonin, Noshin Pure
+ 586. Medication name_Eve, Loxonin, Tryptanol
+ 587. Medication name_Eve, Loxoprofen
+ 588. Medication name_Eve, Loxoprofen, Sedeshai
+ 589. Medication name_Eve, Luna Eye, Calonal
+ 590. Medication name_Eve, Lycopra
+ 591. Medication name_Eve, Maxalt, Amagi
+ 592. Medication name_Eve, Maxalt, SG Granules
+ 593. Medication name_Eve, Nalon Ace, Bufferin
+ 594. Medication name_Eve, Naron Ace, Loxonin, Calonal
+ 595. Medication name_Eve, Noshin
+ 596. Medication name_Eve, Noshin Pure
+ 597. Medication name_Eve, Pure
+ 598. Medication name_Eve, Pure, Bufferin, Loxonin
+ 599. Medication name_Eve, Pylon PT Granules
+ 600. Medication name_Eve, Relpax
+ 601. Medication name_Eve, Ringle Ivy
+ 602. Medication name_Eve, Rizatriptan
+ 603. Medication name_Eve, S.G.
+ 604. Medication name_Eve, Sedes
+ 605. Medication name_Eve, Sedes, Calonal
+ 606. Medication name_Eve, Sedes, Loxonin, Calonal
+ 607. Medication name_Eve, Sedeshai, SG Tablets, Zomig
+ 608. Medication name_Eve, acetaminophen
+ 609. Medication name_Eve, cheap medicine at the drugstore
+ 610. Medication name_Eve, diclofenac
+ 611. Medication name_Eve, herbal medicine
+ 612. Medication name_Eve, sumatriptan
+ 613. Medication name_EveQuick, Bufferin Premium, Loxoprofen
+ 614. Medication name_EveQuick, Bufferin, Calonal
+ 615. Medication name_EveQuick, Imigran
+ 616. Medication name_EveQuick, Loxonin
+ 617. Medication name_EveQuick, sumatriptan
+ 618. Medication name_Evequick, Bonfenac suppositories
+ 619. Medication name_Evequick, Loxonin
+ 620. Medication name_Exactly
+ 621. Medication name_Excedrin, EveQuick
+ 622. Medication name_Father's Maxalt
+ 623. Medication name_Fuji Pharmaceutical headache medicine
+ 624. Medication name_Fuji Yakuhin medicine
+ 625. Medication name_Glow Alpha
+ 626. Medication name_Goreisan
+ 627. Medication name_Goshuyuto
+ 628. Medication name_Gyuhuang Seishinmaru
+ 629. Medication name_Hakkirease, Bufferin
+ 630. Medication name_I am breastfeeding and am taking caffeine instead of taking medication.
+ 631. Medication name_I don't know
+ 632. Medication name_Ibuprofen
+ 633. Medication name_Ibuprofen, Amage
+ 634. Medication name_Ibuprofen, Calonal
+ 635. Medication name_Ibuprofen, Calonal, Infree
+ 636. Medication name_Ibuprofen, Imigran
+ 637. Medication name_Ibuprofen, Loxonin
+ 638. Medication name_Ibuprofen, acetaminophen
+ 639. Medication name_Ibuquick, loxoprofen, rizatriptan
+ 640. Medication name_Imigran
+ 641. Medication name_Imigran Kit, Sumatriptan, Rizatriptan
+ 642. Medication name_Imigran Loxonin
+ 643. Medication name_Imigran Nasal Spray
+ 644. Medication name_Imigran nasal spray
+ 645. Medication name_Imigran nasal spray, Maxalt
+ 646. Medication name_Imigran, Amagi, Bufferin
+ 647. Medication name_Imigran, Bufferin, SG
+ 648. Medication name_Imigran, Calonal
+ 649. Medication name_Imigran, EveQuick
+ 650. Medication name_Imigran, Imigran nasal spray, Loxonin
+ 651. Medication name_Imigran, Kakkonto
+ 652. Medication name_Imigran, Loxoprofen
+ 653. Medication name_Imigran, Voltaren, Maxalt
+ 654. Medication name_Ina Tablets
+ 655. Medication name_Interterm
+ 656. Medication name_Isobide, Mecobalamin, Adephos
+ 657. Medication name_Kaiteki Tablets
+ 658. Medication name_Kaiteki Z, Losoprofen
+ 659. Medication name_Kaiteki, Bufferin
+ 660. Medication name_Kakkonto
+ 661. Medication name_Kakkonto, Bufferin
+ 662. Medication name_Kerorin
+ 663. Medication name_Kerorin, Bufferin
+ 664. Medication name_Kerorin, Noshin, Eve
+ 665. Medication name_Kotosan, Loxonin, Calonal
+ 666. Medication name_Kumiai Antipyretic and Analgesic Tablets
+ 667. Medication name_Kyorin AP2
+ 668. Medication name_Leopax, Calonal
+ 669. Medication name_Licorice Plus Ace
+ 670. Medication name_Licorice Plus Ace Calonal

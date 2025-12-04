@@ -1,0 +1,91 @@
+Column,DataType,Missing_%,Unique_Count
+Diagnosis 1,object,0.0,128
+sex,float64,0.0,2
+Age at first visit,float64,12.8,76
+introduction,object,97.1,1
+height,float64,0.2,109
+body weight,float64,0.5,140
+BMI,float64,4.3999999999999995,247
+Dominant hand,object,0.0,3
+drinking,object,45.2,3
+smoking,object,71.1,4
+Bedtime,object,21.4,40
+Wake up time,object,4.1000000000000005,58
+sleep time,float64,5.4,68
+Schooling/employment,object,10.6,1
+Schooling/employment details,object,0.0,4
+Age at onset,float64,5.800000000000001,84
+Onset time: 1 week,object,54.900000000000006,2
+History of headaches,object,8.7,1
+Frequency: Months,float64,55.2,1
+Properties Tightening,float64,57.699999999999996,1
+Characteristics: Throat,float64,38.2,1
+Usual parts,object,2.3,2
+Both pain,float64,59.3,1
+temporal pain,float64,53.400000000000006,1
+Occipital pain,float64,59.599999999999994,1
+VAS,float64,2.7,45
+Varies depending on the change date,float64,28.000000000000004,1
+Need to tolerate obstacles,float64,50.4,1
+Aggravating factor: Shaking your head,float64,51.300000000000004,1
+Aggravating factors: Worsening weather,float64,58.599999999999994,1
+Accompanying symptoms: nausea,float64,45.5,1
+Accompanying symptoms: stiff shoulders and neck,float64,58.3,1
+No prodromal symptoms,float64,46.6,1
+Solution: Lie down,float64,53.1,1
+Taking headache medicine,object,26.1,1
+Medication Over-the-counter medicines,object,40.2,2
+Medication name,object,18.9,887
+Family history,object,43.6,1
+Applicable Child motion sickness,float64,59.3,1
+Applicable: Lack of exercise,float64,54.7,1
+MOH Headache upon waking up,float64,56.39999999999999,1
+HIT6SUM,float64,0.3,40
+GAD1,float64,0.4,4
+GAD2,float64,0.2,4
+GAD3,float64,0.2,4
+GAD4,float64,0.2,4
+GAD5,float64,0.3,4
+GAD6,float64,0.3,4
+GAD 7,float64,0.3,4
+GAD8,float64,0.5,4
+GAD7SUM,float64,0.2,21
+PHQ1,float64,0.3,4
+PHQ2,float64,0.3,4
+PHQ3,float64,0.4,4
+PHQ4,float64,0.4,4
+PHQ5,float64,0.3,4
+PHQ6,float64,0.4,4
+PHQ7,float64,0.4,4
+PHQ8,float64,0.3,4
+PHQ 9,float64,0.3,4
+PHQ10,float64,0.5,4
+PHQSUM,float64,1.2,22
+Allodynia Comb,float64,33.0,2
+Allodynia Tying,float64,28.7,2
+Allodynia beard,float64,40.6,2
+Allodynia glasses,float64,29.4,2
+Allodynia Contact Lenses,float64,33.300000000000004,2
+Allodynia Earrings,float64,37.2,2
+Allodynia Necklace,float64,37.7,2
+Allodynia clothing,float64,30.599999999999998,2
+Allodynia shower,float64,35.3,2
+Allodynia pillow,float64,31.4,2
+Allodynia fever,float64,37.6,2
+Allodynia,float64,36.0,2
+Allodynia score SUM,float64,0.8999999999999999,13
+HIT6 1,float64,0.4,5
+HIT6 2,float64,0.4,5
+HIT6 3,float64,0.4,5
+HIT6 4,float64,0.4,5
+HIT6 5,float64,0.3,5
+HIT6 6,float64,0.4,5
+MIDAS 1A,float64,0.5,37
+MIDAS 1B,float64,0.4,36
+MIDAS 2A,float64,0.4,22
+MIDAS 2B,float64,0.5,35
+MIDAS 3A,float64,0.6,36
+MIDAS 3B,float64,0.5,37
+MIDAS 4A,float64,0.4,38
+MIDAS 4B,float64,0.5,32
+MIDAS 5,float64,0.5,34

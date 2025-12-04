@@ -1,0 +1,144 @@
+Column,Type
+sex,Numerical
+Age at first visit,Numerical
+height,Numerical
+body weight,Numerical
+BMI,Numerical
+sleep time,Numerical
+Age at onset,Numerical
+Properties Tightening,Numerical
+Characteristics: Throat,Numerical
+Both pain,Numerical
+temporal pain,Numerical
+Occipital pain,Numerical
+Varies depending on the change date,Numerical
+Need to tolerate obstacles,Numerical
+Aggravating factor: Shaking your head,Numerical
+Aggravating factors: Worsening weather,Numerical
+Accompanying symptoms: nausea,Numerical
+Accompanying symptoms: stiff shoulders and neck,Numerical
+No prodromal symptoms,Numerical
+Solution: Lie down,Numerical
+Applicable Child motion sickness,Numerical
+Applicable: Lack of exercise,Numerical
+MOH Headache upon waking up,Numerical
+Dominant hand_0,Numerical
+Dominant hand_left,Numerical
+Dominant hand_right,Numerical
+drinking_0,Numerical
+drinking_Occasional drinking,Numerical
+drinking_habitual,Numerical
+smoking_0,Numerical
+smoking_In the past,Numerical
+smoking_Passive smoking available,Numerical
+smoking_Unknown,Numerical
+Bedtime_00:00,Numerical
+Bedtime_00:30,Numerical
+Bedtime_01:00,Numerical
+Bedtime_01:30,Numerical
+Bedtime_02:00,Numerical
+Bedtime_02:30,Numerical
+Bedtime_03:00,Numerical
+Bedtime_03:30,Numerical
+Bedtime_04:00,Numerical
+Bedtime_04:10,Numerical
+Bedtime_05:00,Numerical
+Bedtime_06:00,Numerical
+Bedtime_06:30,Numerical
+Bedtime_07:00,Numerical
+Bedtime_08:00,Numerical
+Bedtime_08:30,Numerical
+Bedtime_09:00,Numerical
+Bedtime_09:30,Numerical
+Bedtime_10:00,Numerical
+Bedtime_10:30,Numerical
+Bedtime_10:45,Numerical
+Bedtime_11:00,Numerical
+Bedtime_11:30,Numerical
+Bedtime_12:00,Numerical
+Bedtime_15:00,Numerical
+Bedtime_18:00,Numerical
+Bedtime_20:00,Numerical
+Bedtime_20:30,Numerical
+Bedtime_21:00,Numerical
+Bedtime_21:30,Numerical
+Bedtime_21:40,Numerical
+Bedtime_22:00,Numerical
+Bedtime_22:30,Numerical
+Bedtime_22:50,Numerical
+Bedtime_23:00,Numerical
+Bedtime_23:30,Numerical
+Bedtime_23:40,Numerical
+Bedtime_23:45,Numerical
+Wake up time_00:00,Numerical
+Wake up time_00:458333333,Numerical
+Wake up time_01:00,Numerical
+Wake up time_01:30,Numerical
+Wake up time_02:00,Numerical
+Wake up time_02:40,Numerical
+Wake up time_03:00,Numerical
+Wake up time_03:30,Numerical
+Wake up time_04:00,Numerical
+Wake up time_04:30,Numerical
+Wake up time_04:40,Numerical
+Wake up time_04:45,Numerical
+Wake up time_04:50,Numerical
+Wake up time_05:00,Numerical
+Wake up time_05:15,Numerical
+Wake up time_05:20,Numerical
+Wake up time_05:25,Numerical
+Wake up time_05:30,Numerical
+Wake up time_05:40,Numerical
+Wake up time_05:45,Numerical
+Wake up time_05:50,Numerical
+Wake up time_06:00,Numerical
+Wake up time_06:05,Numerical
+Wake up time_06:15,Numerical
+Wake up time_06:20,Numerical
+Wake up time_06:25,Numerical
+Wake up time_06:30,Numerical
+Wake up time_06:40,Numerical
+Wake up time_06:45,Numerical
+Wake up time_06:50,Numerical
+Wake up time_07:00,Numerical
+Wake up time_07:15,Numerical
+Wake up time_07:20,Numerical
+Wake up time_07:30,Numerical
+Wake up time_07:40,Numerical
+Wake up time_07:45,Numerical
+Wake up time_07:50,Numerical
+Wake up time_08:00,Numerical
+Wake up time_08:20,Numerical
+Wake up time_08:30,Numerical
+Wake up time_08:50,Numerical
+Wake up time_09:00,Numerical
+Wake up time_09:30,Numerical
+Wake up time_10:00,Numerical
+Wake up time_10:30,Numerical
+Wake up time_11:00,Numerical
+Wake up time_12:00,Numerical
+Wake up time_13:00,Numerical
+Wake up time_13:30,Numerical
+Wake up time_14:00,Numerical
+Wake up time_15:00,Numerical
+Wake up time_16:00,Numerical
+Wake up time_18:00,Numerical
+Wake up time_21:00,Numerical
+Wake up time_22:30,Numerical
+Wake up time_23:00,Numerical
+Schooling/employment_Unknown,Numerical
+Schooling/employment details_Full-time,Numerical
+Schooling/employment details_Part-time,Numerical
+Schooling/employment details_Unknown,Numerical
+Schooling/employment details_student,Numerical
+Onset time: 1 week_1,Numerical
+"Onset time: 1 week_Nothing
+Yes",Numerical
+History of headaches_can be,Numerical
+Usual parts_both sides,Numerical
+Usual parts_one side,Numerical
+Taking headache medicine_y,Numerical
+Medication Over-the-counter medicines_1,Numerical
+"Medication Over-the-counter medicines_Yes
+Nothing",Numerical
+Family history_can be,Numerical
