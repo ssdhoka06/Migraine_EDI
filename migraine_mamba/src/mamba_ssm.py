@@ -7,6 +7,11 @@ that works on Apple Silicon (M3) via MPS backend.
 Based on: "Mamba: Linear-Time Sequence Modeling with Selective State Spaces"
 Paper: https://arxiv.org/abs/2312.00752
 
+Key Features:
+- No CUDA dependencies (works on MPS/CPU)
+- Selective scan mechanism
+- Efficient for short sequences (14 days)
+
 Author: Dhoka
 Date: December 2025
 """
@@ -28,7 +33,6 @@ class RMSNorm(nn.Module):
         self.weight = nn.Parameter(torch.ones(d_model))
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # x: (batch, seq_len, d_model)
         rms = torch.sqrt(torch.mean(x ** 2, dim=-1, keepdim=True) + self.eps)
         return x / rms * self.weight
 
@@ -39,6 +43,12 @@ class SelectiveSSM(nn.Module):
     
     This implements the selective scan mechanism that makes Mamba
     content-aware, unlike traditional SSMs.
+    
+    Parameters:
+        d_model: Model dimension
+        d_state: SSM state dimension (N in paper)
+        d_conv: Local convolution width
+        expand: Expansion factor for inner dimension
     """
     
     def __init__(
@@ -79,8 +89,7 @@ class SelectiveSSM(nn.Module):
             bias=conv_bias,
         )
         
-        # SSM Parameters projection
-        # Projects to: dt (delta), B, C
+        # SSM Parameters projection (dt, B, C)
         self.x_proj = nn.Linear(self.d_inner, self.dt_rank + d_state * 2, bias=False)
         
         # dt projection
@@ -97,7 +106,7 @@ class SelectiveSSM(nn.Module):
         dt = torch.exp(
             torch.rand(self.d_inner) * (math.log(dt_max) - math.log(dt_min)) + math.log(dt_min)
         ).clamp(min=dt_min)
-        inv_dt = dt + torch.log(-torch.expm1(-dt))  # Inverse of softplus
+        inv_dt = dt + torch.log(-torch.expm1(-dt))
         with torch.no_grad():
             self.dt_proj.bias.copy_(inv_dt)
         
@@ -117,57 +126,54 @@ class SelectiveSSM(nn.Module):
         # Output projection
         self.out_proj = nn.Linear(self.d_inner, d_model, bias=bias)
     
-    def _selective_scan(
+    def _selective_scan_sequential(
         self,
-        x: torch.Tensor,  # (batch, d_inner, seq_len)
-        delta: torch.Tensor,  # (batch, d_inner, seq_len)
-        A: torch.Tensor,  # (d_inner, d_state)
-        B: torch.Tensor,  # (batch, d_state, seq_len)
-        C: torch.Tensor,  # (batch, d_state, seq_len)
-        D: torch.Tensor,  # (d_inner,)
+        x: torch.Tensor,
+        delta: torch.Tensor,
+        A: torch.Tensor,
+        B: torch.Tensor,
+        C: torch.Tensor,
+        D: torch.Tensor,
     ) -> torch.Tensor:
         """
-        Selective scan algorithm - the heart of Mamba.
+        Sequential selective scan - works on all backends (MPS, CPU, CUDA).
         
-        This is a pure PyTorch implementation that works on all backends.
-        For production on CUDA, you'd use the optimized CUDA kernel.
+        Args:
+            x: (batch, d_inner, seq_len)
+            delta: (batch, d_inner, seq_len)
+            A: (d_inner, d_state)
+            B: (batch, d_state, seq_len)
+            C: (batch, d_state, seq_len)
+            D: (d_inner,)
         """
         batch, d_inner, seq_len = x.shape
         d_state = A.shape[1]
         
-        # Discretize A and B using delta
-        # deltaA = exp(delta * A)
+        # Discretize: deltaA = exp(delta * A)
         deltaA = torch.exp(
             rearrange(delta, "b d l -> b d l 1") * 
             rearrange(A, "d n -> 1 d 1 n")
-        )  # (batch, d_inner, seq_len, d_state)
+        )
         
-        # deltaB = delta * B
+        # deltaB * x
         deltaB_x = (
             rearrange(delta, "b d l -> b d l 1") *
             rearrange(B, "b n l -> b 1 l n") *
             rearrange(x, "b d l -> b d l 1")
-        )  # (batch, d_inner, seq_len, d_state)
-        
-        # Scan (recurrence)
-        # h[t] = deltaA[t] * h[t-1] + deltaB[t] * x[t]
-        # y[t] = C[t] @ h[t] + D * x[t]
-        
-        h = torch.zeros(
-            (batch, d_inner, d_state),
-            device=x.device,
-            dtype=x.dtype
         )
         
+        # Sequential scan
+        h = torch.zeros(batch, d_inner, d_state, device=x.device, dtype=x.dtype)
         ys = []
+        
         for t in range(seq_len):
             h = deltaA[:, :, t] * h + deltaB_x[:, :, t]
             y = torch.einsum("bdn,bn->bd", h, C[:, :, t])
             ys.append(y)
         
-        y = torch.stack(ys, dim=2)  # (batch, d_inner, seq_len)
+        y = torch.stack(ys, dim=2)
         
-        # Add skip connection
+        # Skip connection
         y = y + D.unsqueeze(0).unsqueeze(-1) * x
         
         return y
@@ -185,21 +191,21 @@ class SelectiveSSM(nn.Module):
         batch, seq_len, d_model = x.shape
         
         # Input projection (split into x and z paths)
-        xz = self.in_proj(x)  # (batch, seq_len, 2 * d_inner)
-        x, z = xz.chunk(2, dim=-1)  # Each: (batch, seq_len, d_inner)
+        xz = self.in_proj(x)
+        x, z = xz.chunk(2, dim=-1)
         
         # Transpose for conv1d: (batch, d_inner, seq_len)
         x = rearrange(x, "b l d -> b d l")
         
         # 1D convolution for local context
-        x = self.conv1d(x)[:, :, :seq_len]  # Trim to original length
+        x = self.conv1d(x)[:, :, :seq_len]
         
         # Activation
         x = F.silu(x)
         
         # SSM parameters from x
         x_rearranged = rearrange(x, "b d l -> b l d")
-        x_proj = self.x_proj(x_rearranged)  # (batch, seq_len, dt_rank + 2*d_state)
+        x_proj = self.x_proj(x_rearranged)
         
         dt, B, C = torch.split(
             x_proj,
@@ -207,9 +213,9 @@ class SelectiveSSM(nn.Module):
             dim=-1
         )
         
-        # Compute delta (dt)
-        dt = self.dt_proj(dt)  # (batch, seq_len, d_inner)
-        dt = F.softplus(dt)  # Ensure positivity
+        # Compute delta
+        dt = self.dt_proj(dt)
+        dt = F.softplus(dt)
         dt = rearrange(dt, "b l d -> b d l")
         
         # Transpose B and C
@@ -217,10 +223,10 @@ class SelectiveSSM(nn.Module):
         C = rearrange(C, "b l n -> b n l")
         
         # Get A from log space
-        A = -torch.exp(self.A_log)  # (d_inner, d_state)
+        A = -torch.exp(self.A_log)
         
         # Selective scan
-        y = self._selective_scan(x, dt, A, B, C, self.D)
+        y = self._selective_scan_sequential(x, dt, A, B, C, self.D)
         
         # Transpose back
         y = rearrange(y, "b d l -> b l d")
@@ -260,13 +266,6 @@ class MambaBlock(nn.Module):
         self.dropout = nn.Dropout(dropout)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            x: (batch, seq_len, d_model)
-        Returns:
-            output: (batch, seq_len, d_model)
-        """
-        # Pre-norm residual connection
         residual = x
         x = self.norm(x)
         x = self.mamba(x)
@@ -281,7 +280,7 @@ class MambaBackbone(nn.Module):
     
     def __init__(
         self,
-        d_model: int = 128,
+        d_model: int = 64,
         n_layers: int = 2,
         d_state: int = 16,
         d_conv: int = 4,
@@ -304,36 +303,31 @@ class MambaBackbone(nn.Module):
         self.norm_f = RMSNorm(d_model)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            x: (batch, seq_len, d_model)
-        Returns:
-            output: (batch, seq_len, d_model)
-        """
         for layer in self.layers:
             x = layer(x)
-        
         return self.norm_f(x)
 
 
-if __name__ == "__main__":
-    # Test the implementation
-    print("Testing Mamba implementation on available device...")
+def test_mamba():
+    """Test the Mamba implementation."""
+    print("=" * 60)
+    print("Testing Mamba Implementation")
+    print("=" * 60)
     
     # Detect device
     if torch.backends.mps.is_available():
         device = torch.device("mps")
-        print("Using Apple Silicon MPS")
+        print("✓ Using Apple Silicon MPS")
     elif torch.cuda.is_available():
         device = torch.device("cuda")
-        print("Using CUDA")
+        print("✓ Using CUDA")
     else:
         device = torch.device("cpu")
-        print("Using CPU")
+        print("✓ Using CPU")
     
     # Test parameters
     batch_size = 4
-    seq_len = 14  # 14 days
+    seq_len = 14
     d_model = 64
     
     # Create model
@@ -347,15 +341,22 @@ if __name__ == "__main__":
     # Count parameters
     total_params = sum(p.numel() for p in model.parameters())
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"Total parameters: {total_params:,}")
+    print(f"\nTotal parameters: {total_params:,}")
     print(f"Trainable parameters: {trainable_params:,}")
     
     # Test forward pass
     x = torch.randn(batch_size, seq_len, d_model).to(device)
     print(f"\nInput shape: {x.shape}")
     
+    model.eval()
     with torch.no_grad():
         output = model(x)
     
     print(f"Output shape: {output.shape}")
-    print("\n✓ Mamba backbone test passed!")
+    print(f"\n✓ Mamba backbone test PASSED!")
+    
+    return True
+
+
+if __name__ == "__main__":
+    test_mamba()

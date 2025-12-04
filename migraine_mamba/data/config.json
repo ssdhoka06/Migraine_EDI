@@ -1,0 +1,180 @@
+{
+  "generation": {
+    "n_patients": 5000,
+    "n_days": 180,
+    "start_date": "2024-01-01"
+  },
+  
+  "demographics": {
+    "female_proportion": 0.75,
+    "age_mean": 38,
+    "age_std": 12,
+    "age_min": 18,
+    "age_max": 65,
+    "bmi_mean": 25.5,
+    "bmi_std": 4.5,
+    "bmi_min": 18,
+    "bmi_max": 40
+  },
+  
+  "phenotypes": {
+    "chronic": {
+      "prevalence": 0.15,
+      "attacks_per_month_range": [15, 25]
+    },
+    "high_episodic": {
+      "prevalence": 0.25,
+      "attacks_per_month_range": [8, 14]
+    },
+    "moderate": {
+      "prevalence": 0.40,
+      "attacks_per_month_range": [4, 7]
+    },
+    "low": {
+      "prevalence": 0.20,
+      "attacks_per_month_range": [1, 3]
+    }
+  },
+  
+  "triggers": {
+    "sleep": {
+      "prevalence": 0.60,
+      "threshold_hours": 6,
+      "odds_ratio": 3.98
+    },
+    "stress": {
+      "prevalence": 0.80,
+      "threshold": 7,
+      "decline_threshold": 2,
+      "odds_ratio_6h": 1.92,
+      "odds_ratio_12h": 1.50,
+      "odds_ratio_18h": 1.20
+    },
+    "weather": {
+      "prevalence": 0.48,
+      "threshold_mb": 5,
+      "odds_ratio": 1.27
+    },
+    "fasting": {
+      "prevalence": 0.55,
+      "threshold_hours": 8,
+      "odds_ratio": 2.10,
+      "protective_snack_or": 0.75
+    },
+    "alcohol": {
+      "prevalence": 0.35,
+      "odds_ratio_5plus": 2.08
+    },
+    "menstrual": {
+      "prevalence": 0.50,
+      "cycle_days": 28,
+      "high_risk_days": [0, 1],
+      "pre_menstrual_days": [26, 27],
+      "ovulation_days": [12, 13, 14, 15, 16],
+      "odds_ratio_days_0_1": 2.04,
+      "odds_ratio_pre_menstrual": 1.60,
+      "odds_ratio_ovulation": 0.44
+    },
+    "photophobia": {
+      "prevalence": 0.40,
+      "odds_ratio": 1.50
+    }
+  },
+  
+  "temporal_constraints": {
+    "refractory_period_days": 2,
+    "clustering_probability": 0.30,
+    "clustering_window_days": 7,
+    "clustering_multiplier": 1.25
+  },
+  
+  "circadian": {
+    "peak_hour_mean": 9,
+    "peak_hour_std": 3,
+    "peak_hour_min": 5,
+    "peak_hour_max": 14,
+    "peak_multiplier": 1.30
+  },
+  
+  "features": {
+    "sleep": {
+      "mean_hours": 7.0,
+      "std_hours": 1.5,
+      "min_hours": 3,
+      "max_hours": 12,
+      "weekend_bonus": 0.5,
+      "autocorrelation": 0.6
+    },
+    "stress": {
+      "weekday_mean": 5.5,
+      "weekend_mean": 4.0,
+      "std": 2.0,
+      "scale_min": 1,
+      "scale_max": 10,
+      "autocorrelation": 0.7
+    },
+    "weather": {
+      "pressure_mean": 1013.25,
+      "pressure_std": 10,
+      "pressure_daily_change_std": 3,
+      "pressure_autocorrelation": 0.85,
+      "temperature_base": 15,
+      "temperature_seasonal_amplitude": 10,
+      "humidity_base": 50,
+      "humidity_seasonal_amplitude": 20
+    },
+    "meals": {
+      "skip_breakfast_prob": 0.15,
+      "skip_lunch_prob": 0.05,
+      "skip_dinner_prob": 0.02,
+      "have_snack_prob": 0.40
+    },
+    "alcohol": {
+      "drinking_day_prob": 0.15,
+      "weekend_multiplier": 2.0,
+      "drinks_mean": 2.5
+    },
+    "light_exposure": {
+      "bright_light_prob": 0.20
+    },
+    "attack_severity": {
+      "mean": 6.5,
+      "std": 1.8,
+      "min": 1,
+      "max": 10
+    },
+    "attack_duration": {
+      "mean_hours": 12,
+      "min_hours": 4,
+      "max_hours": 72,
+      "female_multiplier": 1.5
+    }
+  },
+  
+  "prodrome": {
+    "prevalence": 0.85,
+    "symptom_probabilities": {
+      "fatigue": 0.72,
+      "mood_change": 0.65,
+      "neck_stiffness": 0.61,
+      "yawning": 0.48,
+      "food_cravings": 0.43,
+      "concentration_difficulty": 0.38,
+      "sensitivity_light": 0.35,
+      "sensitivity_sound": 0.30
+    }
+  },
+  
+  "missing_data": {
+    "random_missing_rate": 0.05,
+    "measurement_noise_pct": 0.05
+  },
+  
+  "validation_targets": {
+    "phenotype_tolerance": 0.03,
+    "attack_frequency_tolerance": 0.20,
+    "sleep_or_range": [2.0, 6.0],
+    "weather_or_range": [1.0, 2.0],
+    "menstrual_or_range": [1.5, 3.0]
+  }
+}

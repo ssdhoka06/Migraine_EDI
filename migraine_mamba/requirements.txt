@@ -1,19 +1,25 @@
 # MigraineMamba - Requirements for MacBook Air M3
+# ==============================================
 # Install with: pip install -r requirements.txt
+# 
+# IMPORTANT: Run these commands in order:
+# 1. conda create -n mamba_env python=3.10 -y
+# 2. conda activate mamba_env
+# 3. pip install -r requirements.txt
 
-# Core ML Framework
-torch>=2.1.0  # PyTorch with MPS support for Apple Silicon
+# Core ML Framework (MPS support for Apple Silicon)
+torch>=2.1.0
 torchvision>=0.16.0
 torchaudio>=2.1.0
 
 # Data Processing
-numpy>=1.24.0
+numpy>=1.24.0,<2.0.0
 pandas>=2.0.0
 scipy>=1.11.0
 
 # ML Utilities
 scikit-learn>=1.3.0
-einops>=0.7.0  # Tensor operations (used in Mamba)
+einops>=0.7.0  # Tensor operations (critical for Mamba)
 
 # Visualization
 matplotlib>=3.7.0
@@ -21,11 +27,9 @@ seaborn>=0.12.0
 
 # Training Utilities
 tqdm>=4.65.0
-wandb>=0.15.0  # Optional: for experiment tracking
 
-# Jupyter (optional, for notebooks)
-jupyter>=1.0.0
-ipywidgets>=8.0.0
+# Optional: Experiment tracking (uncomment if needed)
+# wandb>=0.15.0
 
 # Testing
 pytest>=7.0.0

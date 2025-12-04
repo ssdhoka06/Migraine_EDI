@@ -1,16 +1,18 @@
 """
-MigraineMamba - Complete Model Architecture
-============================================
+MigraineMamba - Complete Model Architecture (Phase 2.3)
+========================================================
 Clinically-interpretable Mamba model for migraine prediction.
 
-Architecture:
-1. Feature Embedding (group features clinically)
-2. Positional Encoding (learnable day positions)
-3. Mamba Backbone (temporal pattern learning)
-4. Clinical Attention (4-head interpretable attention)
-5. Temporal Aggregation (recency-weighted pooling)
-6. Clinical Knowledge Integration (engineered features)
-7. Prediction Heads (attack probability, severity, triggers)
+Architecture Overview:
+1. Feature Embedding - Groups features clinically
+2. Positional Encoding - Learnable day positions
+3. Mamba Backbone - Temporal pattern learning (SSM)
+4. Clinical Attention - 4-head interpretable attention
+5. Temporal Aggregation - Recency-weighted pooling
+6. Clinical Knowledge Integration - Engineered features
+7. Prediction Heads - Attack probability, severity, triggers
+
+Target: ~800K parameters, trainable on M3 MacBook Air
 
 Author: Dhoka
 Date: December 2025
@@ -23,6 +25,7 @@ import torch.nn.functional as F
 from typing import Dict, Optional, Tuple, List
 from dataclasses import dataclass
 
+# Import from local mamba_ssm module
 from mamba_ssm import MambaBackbone, RMSNorm
 
 
@@ -30,16 +33,15 @@ from mamba_ssm import MambaBackbone, RMSNorm
 class MigraineModelConfig:
     """Configuration for MigraineMamba model."""
     
-    # Input dimensions (from your synthetic data)
-    n_continuous_features: int = 8  # sleep_hours, stress_level, pressure, etc.
-    n_binary_features: int = 8  # had_breakfast, bright_light, etc.
-    n_prodrome_features: int = 8  # prodrome symptoms (optional, can be 0)
-    seq_len: int = 14  # 14-day lookback window
+    # Input dimensions (matching synthetic data)
+    n_continuous_features: int = 8   # sleep_hours, stress_level, pressure, etc.
+    n_binary_features: int = 6       # had_breakfast, bright_light, etc.
+    seq_len: int = 14                # 14-day lookback window
     
     # Embedding dimensions
-    d_model: int = 64  # Main hidden dimension
-    d_embed_continuous: int = 32  # Continuous feature embedding
-    d_embed_binary: int = 16  # Binary feature embedding
+    d_model: int = 64                # Main hidden dimension
+    d_embed_continuous: int = 32     # Continuous feature embedding
+    d_embed_binary: int = 16         # Binary feature embedding
     
     # Mamba configuration
     n_mamba_layers: int = 2
@@ -49,16 +51,15 @@ class MigraineModelConfig:
     
     # Attention configuration
     n_attention_heads: int = 4
-    d_attention: int = 32
     
     # Clinical knowledge features
-    n_clinical_features: int = 8  # Engineered features
+    n_clinical_features: int = 8     # Engineered features
     
     # Regularization
     dropout: float = 0.3
     
     # Output
-    n_trigger_classes: int = 7  # Number of trigger types
+    n_trigger_classes: int = 7       # Number of trigger types
 
 
 class FeatureEmbedding(nn.Module):
@@ -66,16 +67,14 @@ class FeatureEmbedding(nn.Module):
     Layer 1: Feature Embedding
     
     Groups features clinically and embeds each group separately.
-    This maintains semantic meaning and enables group-level interpretation.
+    Maintains semantic meaning for interpretation.
     """
     
     def __init__(self, config: MigraineModelConfig):
         super().__init__()
         self.config = config
         
-        # Continuous feature embedding
-        # Features: sleep_hours, stress_level, pressure, pressure_change, 
-        #           temperature, humidity, hours_fasting, alcohol_drinks
+        # Continuous features: sleep_hours, stress_level, pressure, etc.
         self.continuous_embed = nn.Sequential(
             nn.Linear(config.n_continuous_features, config.d_embed_continuous),
             nn.LayerNorm(config.d_embed_continuous),
@@ -83,9 +82,7 @@ class FeatureEmbedding(nn.Module):
             nn.Dropout(config.dropout * 0.5),
         )
         
-        # Binary feature embedding
-        # Features: had_breakfast, had_lunch, had_dinner, had_snack,
-        #           bright_light, sleep_quality, etc.
+        # Binary features: had_breakfast, bright_light, etc.
         self.binary_embed = nn.Sequential(
             nn.Linear(config.n_binary_features, config.d_embed_binary),
             nn.LayerNorm(config.d_embed_binary),
@@ -93,12 +90,11 @@ class FeatureEmbedding(nn.Module):
             nn.Dropout(config.dropout * 0.5),
         )
         
-        # Menstrual cycle embedding (special handling)
-        # Cycle day 0-27 or -1 for males/not applicable
+        # Menstrual cycle embedding (0-27 + special tokens)
         self.menstrual_embed = nn.Embedding(
             num_embeddings=30,  # 0-27 + padding + male indicator
             embedding_dim=8,
-            padding_idx=29,  # For males
+            padding_idx=29,
         )
         
         # Day of week embedding
@@ -107,12 +103,11 @@ class FeatureEmbedding(nn.Module):
             embedding_dim=8,
         )
         
-        # Calculate total embedding dimension
+        # Total embedding dimension
         self.total_embed_dim = (
             config.d_embed_continuous + 
             config.d_embed_binary + 
-            8 +  # menstrual
-            8    # day of week
+            8 + 8  # menstrual + dow
         )
         
         # Project to model dimension
@@ -120,37 +115,38 @@ class FeatureEmbedding(nn.Module):
     
     def forward(
         self,
-        continuous_features: torch.Tensor,  # (batch, seq_len, n_continuous)
-        binary_features: torch.Tensor,       # (batch, seq_len, n_binary)
-        menstrual_day: torch.Tensor,         # (batch, seq_len) int
-        day_of_week: torch.Tensor,           # (batch, seq_len) int
+        continuous_features: torch.Tensor,
+        binary_features: torch.Tensor,
+        menstrual_day: torch.Tensor,
+        day_of_week: torch.Tensor,
     ) -> torch.Tensor:
         """
-        Embed all feature groups and combine.
-        
+        Args:
+            continuous_features: (batch, seq_len, n_continuous)
+            binary_features: (batch, seq_len, n_binary)
+            menstrual_day: (batch, seq_len)
+            day_of_week: (batch, seq_len)
+            
         Returns:
             embedded: (batch, seq_len, d_model)
         """
-        # Embed each group
+        # Embed each feature group
         cont_emb = self.continuous_embed(continuous_features)
         bin_emb = self.binary_embed(binary_features)
         
-        # Handle menstrual day (-1 for males → use padding index 29)
+        # Handle menstrual day (-1 for males → use index 29)
         menstrual_idx = menstrual_day.clone()
         menstrual_idx[menstrual_idx < 0] = 29
         menstrual_idx = menstrual_idx.clamp(0, 29)
         menstrual_emb = self.menstrual_embed(menstrual_idx.long())
         
-        # Day of week embedding
+        # Day of week
         dow_emb = self.dow_embed(day_of_week.long())
         
-        # Concatenate all embeddings
+        # Concatenate all
         combined = torch.cat([cont_emb, bin_emb, menstrual_emb, dow_emb], dim=-1)
         
-        # Project to model dimension
-        output = self.projection(combined)
-        
-        return output
+        return self.projection(combined)
 
 
 class PositionalEncoding(nn.Module):
@@ -158,28 +154,16 @@ class PositionalEncoding(nn.Module):
     Layer 2: Learnable Positional Encoding
     
     Adds learnable position embeddings for days 1-14.
-    Recent days have different representations than distant days.
     """
     
     def __init__(self, config: MigraineModelConfig):
         super().__init__()
-        
-        # Learnable positional embeddings
         self.pos_embed = nn.Parameter(
             torch.randn(1, config.seq_len, config.d_model) * 0.02
         )
-        
         self.dropout = nn.Dropout(config.dropout * 0.5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Add positional encoding to input.
-        
-        Args:
-            x: (batch, seq_len, d_model)
-        Returns:
-            output: (batch, seq_len, d_model)
-        """
         seq_len = x.size(1)
         x = x + self.pos_embed[:, :seq_len, :]
         return self.dropout(x)
@@ -189,14 +173,11 @@ class ClinicalAttention(nn.Module):
     """
     Layer 4: Clinical Attention Mechanism
     
-    Multi-head attention where each head is designed to focus on
-    a specific clinical concept:
+    Multi-head attention with clinical interpretation:
     - Head 1: Sleep-attack relationships
     - Head 2: Weather-attack relationships
     - Head 3: Stress-attack relationships
     - Head 4: Hormonal-attack relationships
-    
-    The attention weights provide interpretability.
     """
     
     def __init__(self, config: MigraineModelConfig):
@@ -206,17 +187,12 @@ class ClinicalAttention(nn.Module):
         self.d_model = config.d_model
         self.d_head = config.d_model // config.n_attention_heads
         
-        # Query, Key, Value projections
         self.q_proj = nn.Linear(config.d_model, config.d_model)
         self.k_proj = nn.Linear(config.d_model, config.d_model)
         self.v_proj = nn.Linear(config.d_model, config.d_model)
-        
-        # Output projection
         self.out_proj = nn.Linear(config.d_model, config.d_model)
         
         self.dropout = nn.Dropout(config.dropout)
-        
-        # Store attention weights for interpretability
         self.attention_weights = None
     
     def forward(
@@ -224,17 +200,6 @@ class ClinicalAttention(nn.Module):
         x: torch.Tensor,
         return_attention: bool = False
     ) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
-        """
-        Multi-head attention with interpretable weights.
-        
-        Args:
-            x: (batch, seq_len, d_model)
-            return_attention: whether to return attention weights
-            
-        Returns:
-            output: (batch, seq_len, d_model)
-            attention_weights: (batch, n_heads, seq_len, seq_len) if requested
-        """
         batch, seq_len, _ = x.shape
         
         # Project to Q, K, V
@@ -253,13 +218,10 @@ class ClinicalAttention(nn.Module):
         attention = F.softmax(scores, dim=-1)
         attention = self.dropout(attention)
         
-        # Store for interpretability
         self.attention_weights = attention.detach()
         
-        # Apply attention to values
+        # Apply attention
         output = torch.matmul(attention, v)
-        
-        # Reshape back
         output = output.transpose(1, 2).contiguous().view(batch, seq_len, self.d_model)
         output = self.out_proj(output)
         
@@ -272,30 +234,24 @@ class TemporalAggregation(nn.Module):
     """
     Layer 5: Temporal Aggregation
     
-    Combines 14-day sequence into a single summary representation
-    using recency-weighted pooling (recent days matter more).
+    Combines 14-day sequence into single summary using
+    recency-weighted pooling (recent days matter more).
     """
     
     def __init__(self, config: MigraineModelConfig):
         super().__init__()
         
-        self.seq_len = config.seq_len
-        
-        # Learnable aggregation weights (initialized with recency bias)
-        # Day 14 (most recent) has highest weight
+        # Initialize with recency bias: exp(-0.1 * (14 - day))
         initial_weights = torch.exp(
             -0.1 * torch.arange(config.seq_len, 0, -1).float()
         )
         self.agg_weights = nn.Parameter(initial_weights)
         
-        # Additional learned query for attention-based aggregation
-        self.query = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)
+        # Attention-based aggregation query
         self.attention_proj = nn.Linear(config.d_model, 1)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-        Aggregate sequence into single vector.
-        
         Args:
             x: (batch, seq_len, d_model)
         Returns:
@@ -303,19 +259,17 @@ class TemporalAggregation(nn.Module):
         """
         batch, seq_len, d_model = x.shape
         
-        # Method 1: Recency-weighted mean
+        # Recency-weighted mean
         weights = F.softmax(self.agg_weights[:seq_len], dim=0)
         weighted_sum = torch.einsum("bld,l->bd", x, weights)
         
-        # Method 2: Attention-based aggregation
-        attention_scores = self.attention_proj(x).squeeze(-1)  # (batch, seq_len)
-        attention_weights = F.softmax(attention_scores, dim=-1)
-        attention_agg = torch.einsum("bld,bl->bd", x, attention_weights)
+        # Attention-based aggregation
+        attn_scores = self.attention_proj(x).squeeze(-1)
+        attn_weights = F.softmax(attn_scores, dim=-1)
+        attention_agg = torch.einsum("bld,bl->bd", x, attn_weights)
         
-        # Combine both methods
-        aggregated = 0.5 * weighted_sum + 0.5 * attention_agg
-        
-        return aggregated
+        # Combine both
+        return 0.5 * weighted_sum + 0.5 * attention_agg
 
 
 class ClinicalKnowledgeIntegration(nn.Module):
@@ -327,25 +281,17 @@ class ClinicalKnowledgeIntegration(nn.Module):
     - Menstrual high-risk phase
     - Attack frequency trend
     - Trigger accumulation score
-    - Circadian patterns
-    
-    These are NOT learned, but calculated from input.
     """
     
     def __init__(self, config: MigraineModelConfig):
         super().__init__()
         
-        self.d_model = config.d_model
-        self.n_clinical = config.n_clinical_features
-        
-        # Project clinical features to embedding space
         self.clinical_proj = nn.Sequential(
             nn.Linear(config.n_clinical_features, 32),
             nn.ReLU(),
             nn.Linear(32, 32),
         )
         
-        # Combine with aggregated representation
         self.combine = nn.Linear(config.d_model + 32, config.d_model)
     
     def forward(
@@ -354,19 +300,15 @@ class ClinicalKnowledgeIntegration(nn.Module):
         clinical_features: torch.Tensor
     ) -> torch.Tensor:
         """
-        Integrate clinical knowledge with learned representation.
-        
         Args:
-            aggregated: (batch, d_model) from temporal aggregation
-            clinical_features: (batch, n_clinical) engineered features
-            
+            aggregated: (batch, d_model)
+            clinical_features: (batch, n_clinical)
         Returns:
             combined: (batch, d_model)
         """
         clinical_emb = self.clinical_proj(clinical_features)
         combined = torch.cat([aggregated, clinical_emb], dim=-1)
-        output = self.combine(combined)
-        return output
+        return self.combine(combined)
 
 
 class PredictionHeads(nn.Module):
@@ -375,14 +317,16 @@ class PredictionHeads(nn.Module):
     
     Three output heads:
     1. Attack Probability: P(attack in next 24h)
-    2. Attack Severity: Expected severity if attack occurs
-    3. Trigger Attribution: Importance scores for each trigger type
+    2. Attack Severity: Expected severity if attack
+    3. Trigger Attribution: Importance scores
+    
+    Plus SSL head for masked reconstruction.
     """
     
     def __init__(self, config: MigraineModelConfig):
         super().__init__()
         
-        # Head 1: Attack probability
+        # Attack probability head
         self.attack_head = nn.Sequential(
             nn.Linear(config.d_model, 64),
             nn.ReLU(),
@@ -393,21 +337,21 @@ class PredictionHeads(nn.Module):
             nn.Linear(32, 1),
         )
         
-        # Head 2: Severity prediction (only used when attack predicted)
+        # Severity head
         self.severity_head = nn.Sequential(
             nn.Linear(config.d_model, 32),
             nn.ReLU(),
             nn.Linear(32, 1),
         )
         
-        # Head 3: Trigger attribution
+        # Trigger attribution head
         self.trigger_head = nn.Sequential(
             nn.Linear(config.d_model, 32),
             nn.ReLU(),
             nn.Linear(32, config.n_trigger_classes),
         )
         
-        # Head 4: Reconstruction head for SSL (predicts masked features)
+        # Reconstruction head for SSL
         self.reconstruction_head = nn.Sequential(
             nn.Linear(config.d_model, config.d_model),
             nn.ReLU(),
@@ -419,44 +363,22 @@ class PredictionHeads(nn.Module):
         x: torch.Tensor,
         return_all: bool = False
     ) -> Dict[str, torch.Tensor]:
-        """
-        Generate all predictions.
-        
-        Args:
-            x: (batch, d_model) final representation
-            return_all: whether to return all outputs
-            
-        Returns:
-            Dictionary with attack_prob, severity, triggers
-        """
-        # Attack probability (logits, use sigmoid for probability)
         attack_logits = self.attack_head(x).squeeze(-1)
-        
         outputs = {"attack_logits": attack_logits}
         
         if return_all:
-            # Severity (1-10 scale)
             severity = self.severity_head(x).squeeze(-1)
-            severity = torch.sigmoid(severity) * 9 + 1  # Map to 1-10
+            severity = torch.sigmoid(severity) * 9 + 1  # Scale to 1-10
             outputs["severity"] = severity
             
-            # Trigger attribution (softmax for importance scores)
             trigger_logits = self.trigger_head(x)
-            trigger_importance = F.softmax(trigger_logits, dim=-1)
-            outputs["trigger_importance"] = trigger_importance
+            outputs["trigger_importance"] = F.softmax(trigger_logits, dim=-1)
             outputs["trigger_logits"] = trigger_logits
         
         return outputs
     
     def reconstruct(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Reconstruction head for SSL pre-training.
-        
-        Args:
-            x: (batch, seq_len, d_model)
-        Returns:
-            reconstructed: (batch, seq_len, n_features)
-        """
+        """Reconstruction for SSL pre-training."""
         return self.reconstruction_head(x)
 
 
@@ -464,10 +386,12 @@ class MigraineMamba(nn.Module):
     """
     Complete MigraineMamba Model
     
-    Combines all layers into a single model for migraine prediction.
+    Combines all layers for migraine prediction.
     
     Input: 14 days of patient data
     Output: Attack probability, severity, trigger attribution
+    
+    Expected parameters: ~800K
     """
     
     def __init__(self, config: Optional[MigraineModelConfig] = None):
@@ -504,7 +428,6 @@ class MigraineMamba(nn.Module):
         # Layer 7: Prediction Heads
         self.prediction_heads = PredictionHeads(self.config)
         
-        # Initialize weights
         self._init_weights()
     
     def _init_weights(self):
@@ -528,34 +451,30 @@ class MigraineMamba(nn.Module):
         return_all: bool = False,
     ) -> Dict[str, torch.Tensor]:
         """
-        Forward pass through the complete model.
+        Forward pass through complete model.
         
         Args:
-            continuous_features: (batch, seq_len, n_continuous) normalized values
-            binary_features: (batch, seq_len, n_binary) 0/1 values
-            menstrual_day: (batch, seq_len) cycle day 0-27 or -1
-            day_of_week: (batch, seq_len) 0-6
-            clinical_features: (batch, n_clinical) engineered features
-            return_attention: whether to return attention weights
-            return_all: whether to return all outputs
+            continuous_features: (batch, seq_len, n_continuous)
+            binary_features: (batch, seq_len, n_binary)
+            menstrual_day: (batch, seq_len)
+            day_of_week: (batch, seq_len)
+            clinical_features: (batch, n_clinical)
             
         Returns:
-            Dictionary with predictions and optional attention
+            Dictionary with predictions
         """
-        batch_size = continuous_features.size(0)
-        
         # Layer 1: Embed features
         embedded = self.feature_embedding(
             continuous_features, binary_features, menstrual_day, day_of_week
         )
         
-        # Layer 2: Add positional encoding
+        # Layer 2: Positional encoding
         embedded = self.positional_encoding(embedded)
         
         # Layer 3: Mamba temporal processing
         mamba_output = self.mamba(embedded)
         
-        # Layer 4: Clinical attention (residual connection)
+        # Layer 4: Clinical attention (+ residual)
         attended, attention_weights = self.clinical_attention(
             mamba_output, return_attention=return_attention
         )
@@ -564,7 +483,7 @@ class MigraineMamba(nn.Module):
         # Layer 5: Temporal aggregation
         aggregated = self.temporal_aggregation(attended)
         
-        # Layer 6: Integrate clinical knowledge
+        # Layer 6: Clinical knowledge integration
         combined = self.clinical_integration(aggregated, clinical_features)
         
         # Layer 7: Predictions
@@ -584,25 +503,21 @@ class MigraineMamba(nn.Module):
         mask: Optional[torch.Tensor] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """
-        Forward pass for self-supervised learning (masked reconstruction).
+        Forward pass for self-supervised learning.
         
         Args:
-            continuous_features: (batch, seq_len, n_continuous)
-            binary_features: (batch, seq_len, n_binary)
-            menstrual_day: (batch, seq_len)
-            day_of_week: (batch, seq_len)
             mask: (batch, seq_len) boolean mask of positions to reconstruct
             
         Returns:
             reconstructed: (batch, seq_len, n_features)
-            mamba_output: (batch, seq_len, d_model) for contrastive learning
+            mamba_output: (batch, seq_len, d_model)
         """
         # Embed features
         embedded = self.feature_embedding(
             continuous_features, binary_features, menstrual_day, day_of_week
         )
         
-        # Add positional encoding
+        # Positional encoding
         embedded = self.positional_encoding(embedded)
         
         # Apply mask (zero out masked positions)
@@ -613,30 +528,24 @@ class MigraineMamba(nn.Module):
         # Mamba processing
         mamba_output = self.mamba(embedded)
         
-        # Reconstruct masked features
+        # Reconstruct
         reconstructed = self.prediction_heads.reconstruct(mamba_output)
         
         return reconstructed, mamba_output
     
     def get_attention_interpretation(self) -> Dict[str, torch.Tensor]:
-        """
-        Get interpretable attention weights from the clinical attention layer.
-        
-        Returns:
-            Dictionary mapping head names to attention weights
-        """
+        """Get interpretable attention weights."""
         head_names = ["sleep", "weather", "stress", "hormonal"]
         attention = self.clinical_attention.attention_weights
         
         if attention is None:
             return {}
         
-        interpretation = {}
-        for i, name in enumerate(head_names):
-            if i < attention.size(1):
-                interpretation[name] = attention[:, i, :, :]
-        
-        return interpretation
+        return {
+            name: attention[:, i, :, :]
+            for i, name in enumerate(head_names)
+            if i < attention.size(1)
+        }
     
     def count_parameters(self) -> Dict[str, int]:
         """Count parameters by component."""
@@ -655,26 +564,13 @@ class MigraineMamba(nn.Module):
 
 def create_model(
     n_continuous: int = 8,
-    n_binary: int = 8,
+    n_binary: int = 6,
     seq_len: int = 14,
     d_model: int = 64,
     n_layers: int = 2,
     dropout: float = 0.3,
 ) -> MigraineMamba:
-    """
-    Factory function to create MigraineMamba model.
-    
-    Args:
-        n_continuous: Number of continuous input features
-        n_binary: Number of binary input features
-        seq_len: Sequence length (days)
-        d_model: Hidden dimension
-        n_layers: Number of Mamba layers
-        dropout: Dropout rate
-        
-    Returns:
-        Configured MigraineMamba model
-    """
+    """Factory function to create MigraineMamba model."""
     config = MigraineModelConfig(
         n_continuous_features=n_continuous,
         n_binary_features=n_binary,
@@ -686,32 +582,25 @@ def create_model(
     return MigraineMamba(config)
 
 
-if __name__ == "__main__":
+def test_model():
+    """Test the complete MigraineMamba model."""
     print("=" * 60)
-    print("Testing MigraineMamba Model")
+    print("Testing MigraineMamba Model (Phase 2.3)")
     print("=" * 60)
     
     # Detect device
     if torch.backends.mps.is_available():
         device = torch.device("mps")
-        print("Using Apple Silicon MPS")
+        print("✓ Using Apple Silicon MPS")
     elif torch.cuda.is_available():
         device = torch.device("cuda")
-        print("Using CUDA")
+        print("✓ Using CUDA")
     else:
         device = torch.device("cpu")
-        print("Using CPU")
+        print("✓ Using CPU")
     
     # Create model
-    config = MigraineModelConfig(
-        n_continuous_features=8,
-        n_binary_features=8,
-        seq_len=14,
-        d_model=64,
-        n_mamba_layers=2,
-        dropout=0.3,
-    )
-    
+    config = MigraineModelConfig()
     model = MigraineMamba(config).to(device)
     
     # Count parameters
@@ -725,7 +614,7 @@ if __name__ == "__main__":
     seq_len = 14
     
     continuous = torch.randn(batch_size, seq_len, 8).to(device)
-    binary = torch.randint(0, 2, (batch_size, seq_len, 8)).float().to(device)
+    binary = torch.randint(0, 2, (batch_size, seq_len, 6)).float().to(device)
     menstrual = torch.randint(-1, 28, (batch_size, seq_len)).to(device)
     dow = torch.randint(0, 7, (batch_size, seq_len)).to(device)
     clinical = torch.randn(batch_size, 8).to(device)
@@ -753,7 +642,7 @@ if __name__ == "__main__":
     
     # Test SSL forward
     mask = torch.zeros(batch_size, seq_len, dtype=torch.bool).to(device)
-    mask[:, [3, 7, 11]] = True  # Mask 3 days
+    mask[:, [3, 7, 11]] = True
     
     reconstructed, mamba_out = model.forward_ssl(
         continuous, binary, menstrual, dow, mask
@@ -764,5 +653,11 @@ if __name__ == "__main__":
     print(f"  mamba_output: {mamba_out.shape}")
     
     print("\n" + "=" * 60)
-    print("✓ MigraineMamba test passed!")
+    print("✓ MigraineMamba test PASSED!")
     print("=" * 60)
+    
+    return True
+
+
+if __name__ == "__main__":
+    test_model()
