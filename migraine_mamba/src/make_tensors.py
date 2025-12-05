@@ -474,7 +474,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process migraine data into tensors")
     parser.add_argument(
         "--data", "-d",
-        default="data/migraine_synthetic.csv",
+        default="migraine_mamba/data/migraine_synthetic_data.csv",
         help="Path to synthetic data CSV"
     )
     parser.add_argument(
