@@ -26,3 +26,6 @@ npm-debug.log
 .next/
 out/
 build/
+# Large data files
+*.csv
+migraine_mamba/data/*.csv
