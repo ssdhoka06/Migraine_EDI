@@ -1,5 +1,6 @@
 import { Navigation } from '@/components/ui/navigation';
-export default function DailyLogLayout({
+
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;

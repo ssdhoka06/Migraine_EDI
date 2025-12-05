@@ -1,6 +1,6 @@
-import { Navigation } from '@/components/Navigation';
+import { Navigation } from '@/components/ui/navigation';
 
-export default function DashboardLayout({
+export default function HistoryLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -1,4 +1,4 @@
-import { Navigation } from '@/components/Navigation';
+import { Navigation } from '@/components/ui/navigation';
 
 export default function InsightsLayout({
   children,

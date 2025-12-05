@@ -144,25 +144,55 @@ export interface DailyLogEntry {
   risk_level: string;
   predicted_probability: number;
   actual_probability?: number;
+  // Additional fields for history page
+  prediction_was_correct?: boolean;
+  predicted_risk_level?: string;
+  sleep_hours: number;
+  stress_level: number;
+  sleep_quality_good: boolean;
+  top_triggers?: string[];
+  migraine_details?: {
+    severity: number;
+    duration_hours: number;
+    location: 'left' | 'right' | 'both' | 'frontal' | 'back';
+    with_aura: boolean;
+    medications_taken?: string[];
+  };
 }
 
 export interface WeeklyStats {
   week_start: string;
   total_attacks: number;
+  total_migraines: number;
   avg_severity: number;
   prediction_accuracy: number;
   most_common_triggers: string[];
   improvement_from_last_week: number;
+  streak_days: number;
+  weekly_accuracy: { week: string; accuracy: number }[];
 }
 
 export interface TriggerAnalysis {
-  trigger_name: string;
-  occurrence_rate: number;
-  attack_correlation: number;
-  odds_ratio: number;
-  confidence_interval: [number, number];
-  trend: 'increasing' | 'decreasing' | 'stable';
-  personalized_threshold?: number;
+  total_logs: number;
+  triggers: {
+    name: string;
+    occurrence_rate: number;
+    occurrences: number;
+    attack_correlation: number;
+    odds_ratio: number;
+    contribution: number;
+    confidence_interval: [number, number];
+    trend: 'increasing' | 'decreasing' | 'stable';
+    personalized_threshold?: number;
+    icon: string;
+    description: string;
+  }[];
+  patterns?: {
+    title: string;
+    description: string;
+    icon: string;
+    confidence: number;
+  }[];
 }
 
 export interface InsightData {
