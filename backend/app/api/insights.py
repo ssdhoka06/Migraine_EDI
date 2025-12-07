@@ -1,5 +1,5 @@
 """
-Insights API Router
+Insights API Router - FIXED
 Handles trigger analysis and user insights
 """
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -40,11 +40,10 @@ async def get_trigger_analysis(
             detail="User not found"
         )
     
-    # Get all logs with outcomes
+    # Get ALL logs (not just those with migraine_occurred set)
     result = await db.execute(
         select(DailyLog)
         .where(DailyLog.user_id == user_id)
-        .where(DailyLog.migraine_occurred.isnot(None))
         .order_by(desc(DailyLog.date))
     )
     logs = result.scalars().all()
@@ -238,11 +237,10 @@ async def get_personalized_recommendations(
             detail="User not found"
         )
     
-    # Get trigger analysis
+    # Get ALL logs (not just those with migraine_occurred)
     result = await db.execute(
         select(DailyLog)
         .where(DailyLog.user_id == user_id)
-        .where(DailyLog.migraine_occurred.isnot(None))
     )
     logs = result.scalars().all()
     
