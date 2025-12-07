@@ -41,9 +41,9 @@ api.interceptors.response.use(
   }
 );
 
-// Mock Data Generator (for demo purposes when backend is not available)
+// Mock Data Generators (fallback when backend unavailable)
 const generateMockPrediction = (userId: string): PredictionResponse => {
-  const probability = Math.random() * 0.6 + 0.2; // 20-80%
+  const probability = Math.random() * 0.4 + 0.2; // 20-60%
   const riskLevel = probability < 0.3 ? 'LOW' : probability < 0.5 ? 'MODERATE' : probability < 0.7 ? 'HIGH' : 'VERY_HIGH';
   
   return {
@@ -52,103 +52,45 @@ const generateMockPrediction = (userId: string): PredictionResponse => {
     prediction_time: new Date().toISOString(),
     attack_probability: probability,
     risk_level: riskLevel,
-    severity_prediction: Math.random() * 4 + 5, // 5-9
-    model_version: 'mamba_personalized_v2',
-    confidence: 0.78 + Math.random() * 0.15,
-    phase: 'personalized',
+    severity_prediction: Math.random() * 4 + 5,
+    model_version: 'lightgbm_foundation_v1',
+    confidence: 0.76,
+    phase: 'foundation',
     top_triggers: [
-      {
-        trigger: 'Sleep Deficit',
-        contribution: 0.35,
-        icon: '😴',
-        color: '#8b5cf6',
-        description: 'Only 5 hours of sleep last night'
-      },
-      {
-        trigger: 'Weather Change',
-        contribution: 0.28,
-        icon: '🌡️',
-        color: '#06b6d4',
-        description: 'Barometric pressure dropping 8mb'
-      },
-      {
-        trigger: 'Stress Level',
-        contribution: 0.22,
-        icon: '😰',
-        color: '#f97316',
-        description: 'Elevated stress for 3 consecutive days'
-      },
-      {
-        trigger: 'Menstrual Phase',
-        contribution: 0.15,
-        icon: '📅',
-        color: '#ec4899',
-        description: 'Day 2 of menstrual cycle'
-      }
+      { trigger: 'Sleep Deficit', contribution: 0.35, icon: '😴', color: '#8b5cf6', description: 'Sleep patterns affect risk' },
+      { trigger: 'Stress Level', contribution: 0.25, icon: '😰', color: '#f97316', description: 'Elevated stress detected' },
     ],
     recommendations: [
-      {
-        priority: 'high',
-        action: 'Take preventive medication',
-        reason: 'High risk detected - consider preventive measures',
-        icon: '💊'
-      },
-      {
-        priority: 'high',
-        action: 'Ensure 8+ hours of sleep tonight',
-        reason: 'Sleep deficit is your #1 trigger',
-        icon: '🛏️'
-      },
-      {
-        priority: 'medium',
-        action: 'Stay well hydrated',
-        reason: 'Drink at least 8 glasses of water',
-        icon: '💧'
-      },
-      {
-        priority: 'medium',
-        action: 'Avoid screens 1 hour before bed',
-        reason: 'Reduce visual strain and improve sleep quality',
-        icon: '📱'
-      },
-      {
-        priority: 'low',
-        action: 'Practice relaxation techniques',
-        reason: 'Help manage elevated stress levels',
-        icon: '🧘'
-      }
+      { priority: 'high', action: 'Ensure 7-8 hours of sleep', reason: 'Sleep is key for prevention', icon: '🛏️' },
+      { priority: 'medium', action: 'Stay hydrated', reason: 'Drink 8 glasses of water', icon: '💧' },
     ],
-    contributing_factors: [
-      { factor: 'Sleep Hours', value: 5, threshold: 6, status: 'critical' },
-      { factor: 'Pressure Change', value: -8, threshold: -5, status: 'warning' },
-      { factor: 'Stress Level', value: 7, threshold: 6, status: 'warning' },
-      { factor: 'Caffeine', value: 2, threshold: 3, status: 'normal' }
-    ],
-    protective_factors: [
-      'Regular meal timing maintained',
-      'No alcohol consumption',
-      'Adequate hydration'
-    ]
+    contributing_factors: [],
+    protective_factors: []
   };
 };
 
-const generateMockProfile = (userId: string): UserProfile => ({
-  id: userId,
-  gender: 'F',
-  age: 32,
-  height: 165,
-  weight: 60,
-  bmi: 22.0,
-  attacks_per_month: 4,
-  location_city: 'San Francisco',
-  has_menstrual_cycle: true,
-  cycle_start_day: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-  created_at: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
-  days_logged: 45,
-  current_phase: 'personalized',
-  model_version: 'mamba_personalized_week_2',
-  personalization_week: 2
-});
+const generateMockProfile = (userId: string): UserProfile => {
+  const stored = typeof window !== 'undefined' ? localStorage.getItem('user_profile') : null;
+  if (stored) {
+    return JSON.parse(stored);
+  }
+  return {
+    id: userId,
+    gender: 'F',
+    age: 30,
+    height: 165,
+    weight: 60,
+    bmi: 22.0,
+    attacks_per_month: 4,
+    location_city: 'Unknown',
+    has_menstrual_cycle: false,
+    created_at: new Date().toISOString(),
+    days_logged: 0,
+    current_phase: 'foundation',
+    model_version: 'foundation_v1',
+    personalization_week: 0
+  };
+};
 
 const generateMockHistory = (days: number): DailyLogEntry[] => {
   const history: DailyLogEntry[] = [];
@@ -157,53 +99,37 @@ const generateMockHistory = (days: number): DailyLogEntry[] => {
   for (let i = days; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
-    
-    const migraine = Math.random() < 0.15; // 15% base rate
-    const predicted = Math.random() * 0.6 + 0.2;
-    const predictedRisk = predicted < 0.3 ? 'LOW' : predicted < 0.5 ? 'MODERATE' : 'HIGH';
-    
-    // Determine if prediction was correct
-    const wasHighRisk = predicted >= 0.5;
-    const predictionCorrect = (migraine && wasHighRisk) || (!migraine && !wasHighRisk);
+    const predicted = Math.random() * 0.5 + 0.2;
+    const migraine = Math.random() < 0.15;
     
     history.push({
       date: date.toISOString().split('T')[0],
       migraine_occurred: migraine,
-      severity: migraine ? Math.floor(Math.random() * 4) + 6 : undefined,
-      risk_level: predictedRisk,
+      severity: migraine ? Math.floor(Math.random() * 4) + 5 : undefined,
+      risk_level: predicted < 0.3 ? 'LOW' : predicted < 0.5 ? 'MODERATE' : 'HIGH',
       predicted_probability: predicted,
-      predicted_risk_level: predictedRisk,
-      prediction_was_correct: predictionCorrect,
-      sleep_hours: Math.random() * 4 + 5, // 5-9 hours
-      stress_level: Math.floor(Math.random() * 6) + 3, // 3-8
+      predicted_risk_level: predicted < 0.3 ? 'LOW' : predicted < 0.5 ? 'MODERATE' : 'HIGH',
+      prediction_was_correct: true,
+      sleep_hours: Math.random() * 3 + 5,
+      stress_level: Math.floor(Math.random() * 5) + 3,
       sleep_quality_good: Math.random() > 0.3,
-      top_triggers: migraine ? ['Sleep Deficit', 'Stress', 'Weather'].slice(0, Math.floor(Math.random() * 3) + 1) : [],
-      migraine_details: migraine ? {
-        severity: Math.floor(Math.random() * 4) + 6,
-        duration_hours: Math.floor(Math.random() * 12) + 2,
-        location: ['left', 'right', 'both'][Math.floor(Math.random() * 3)] as 'left' | 'right' | 'both',
-        with_aura: Math.random() > 0.7,
-      } : undefined,
-      prediction_accuracy: migraine 
-        ? (predicted > 0.5 ? 'correct' : 'false_negative')
-        : (predicted < 0.5 ? 'true_negative' : 'false_positive')
+      top_triggers: [],
+      migraine_details: undefined,
+      prediction_accuracy: 'true_negative' as const,
     });
   }
-  
   return history;
 };
 
-// API Client
+// API Client - Updated to match backend routes
 export const apiClient = {
-  // Onboarding
+  // Onboarding - POST /api/v1/users/onboarding
   async submitOnboarding(data: OnboardingData): Promise<ApiResponse<{ user_id: string }>> {
     try {
-      const response = await api.post('/onboarding', data);
-      return { success: true, data: response.data };
-    } catch (error) {
-      // Mock response for demo
-      const userId = `user_${Date.now()}`;
-      if (typeof window !== 'undefined') {
+      const response = await api.post('/users/onboarding', data);
+      // Backend returns { success, data: { user_id, ... }, message }
+      const userId = response.data?.data?.user_id || response.data?.user_id;
+      if (userId) {
         localStorage.setItem('user_id', userId);
         localStorage.setItem('user_profile', JSON.stringify({
           ...data,
@@ -211,223 +137,238 @@ export const apiClient = {
           created_at: new Date().toISOString(),
           days_logged: 0,
           current_phase: 'foundation',
-          model_version: 'foundation_v1',
+          model_version: 'lightgbm_foundation_v1',
           personalization_week: 0
         }));
       }
       return { success: true, data: { user_id: userId } };
+    } catch (error: any) {
+      console.error('Onboarding failed, using local fallback:', error.response?.data || error.message);
+      // Fallback: create local user ID
+      const userId = `user_${Date.now()}`;
+      localStorage.setItem('user_id', userId);
+      localStorage.setItem('user_profile', JSON.stringify({
+        ...data,
+        id: userId,
+        created_at: new Date().toISOString(),
+        days_logged: 0,
+        current_phase: 'foundation',
+        model_version: 'foundation_v1',
+        personalization_week: 0
+      }));
+      return { success: true, data: { user_id: userId } };
     }
   },
 
-  // Daily Log
+  // Daily Log - POST /api/v1/logs/submit
   async submitDailyLog(data: DailyLogData): Promise<ApiResponse<{ success: boolean }>> {
     try {
-      const response = await api.post('/log/daily', data);
+      const response = await api.post('/logs/submit', data);
       return { success: true, data: response.data };
-    } catch (error) {
-      // Mock: save to localStorage
+    } catch (error: any) {
+      console.error('Daily log submission failed:', error.response?.data || error.message);
+      // Save locally as fallback
       if (typeof window !== 'undefined') {
         const logs = JSON.parse(localStorage.getItem('daily_logs') || '[]');
         logs.push({ ...data, submitted_at: new Date().toISOString() });
         localStorage.setItem('daily_logs', JSON.stringify(logs));
-        
-        // Update days logged in profile
-        const profile = JSON.parse(localStorage.getItem('user_profile') || '{}');
-        profile.days_logged = (profile.days_logged || 0) + 1;
-        
-        // Update phase based on days logged
-        if (profile.days_logged >= 31) {
-          profile.current_phase = 'personalized';
-        } else if (profile.days_logged >= 15) {
-          profile.current_phase = 'generic';
-        }
-        
-        localStorage.setItem('user_profile', JSON.stringify(profile));
       }
       return { success: true, data: { success: true } };
     }
   },
 
-  // Get Prediction
+  // Get Prediction - GET /api/v1/predictions/{user_id}
   async getPrediction(userId: string, date?: string): Promise<ApiResponse<PredictionResponse>> {
     try {
       const params = date ? { date } : {};
-      const response = await api.get<PredictionResponse>(`/predict/${userId}`, { params });
-      return { success: true, data: response.data };
-    } catch (error) {
-      // Return mock prediction
+      const response = await api.get(`/predictions/${userId}`, { params });
+      // Backend returns { success, data: { ... }, message, error }
+      const predictionData = response.data?.data || response.data;
+      
+      // Map backend field names to frontend expected names
+      const mappedData: PredictionResponse = {
+        user_id: predictionData.user_id,
+        date: predictionData.prediction_date || predictionData.date || new Date().toISOString().split('T')[0],
+        prediction_time: predictionData.prediction_time || new Date().toISOString(),
+        attack_probability: predictionData.attack_probability,
+        risk_level: predictionData.risk_level,
+        severity_prediction: predictionData.severity_prediction,
+        model_version: predictionData.model_version,
+        confidence: predictionData.confidence,
+        phase: predictionData.model_type === 'foundation' ? 'foundation' : 
+               predictionData.model_type === 'personalized' ? 'personalized' : 'generic',
+        top_triggers: (predictionData.top_triggers || []).map((t: any) => ({
+          trigger: t.trigger || t.name,
+          contribution: t.contribution,
+          icon: t.icon || '⚡',
+          color: t.color || '#8b5cf6',
+          description: t.description || ''
+        })),
+        recommendations: (predictionData.recommendations || []).map((r: any) => ({
+          priority: r.priority || 'medium',
+          action: r.action,
+          reason: r.reason,
+          icon: r.icon || '💡'
+        })),
+        contributing_factors: (predictionData.contributing_factors || []).map((f: any) => ({
+          factor: f.factor,
+          value: f.value,
+          threshold: f.threshold,
+          status: f.status || 'normal'
+        })),
+        protective_factors: predictionData.protective_factors || []
+      };
+      
+      return { success: true, data: mappedData };
+    } catch (error: any) {
+      console.error('Get prediction failed, using mock:', error.response?.data || error.message);
       return { success: true, data: generateMockPrediction(userId) };
     }
   },
 
-  // Get User Profile
+  // Get User Profile - GET /api/v1/users/profile/{user_id}
   async getProfile(userId: string): Promise<ApiResponse<UserProfile>> {
     try {
-      const response = await api.get<UserProfile>(`/users/${userId}`);
-      return { success: true, data: response.data };
-    } catch (error) {
-      // Return from localStorage or generate mock
-      if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem('user_profile');
-        if (stored) {
-          return { success: true, data: JSON.parse(stored) };
-        }
-      }
+      const response = await api.get(`/users/profile/${userId}`);
+      // Backend returns { success, data: { ... }, message, error }
+      const profileData = response.data?.data || response.data;
+      return { success: true, data: profileData };
+    } catch (error: any) {
+      console.error('Get profile failed, using mock:', error.response?.data || error.message);
       return { success: true, data: generateMockProfile(userId) };
     }
   },
 
-  // Get Log History
+  // Get Log History - GET /api/v1/logs/history/{user_id}
   async getLogHistory(userId: string, limit: number = 30): Promise<ApiResponse<DailyLogEntry[]>> {
     try {
-      const response = await api.get(`/logs/${userId}?limit=${limit}`);
-      return { success: true, data: response.data };
-    } catch (error) {
+      const response = await api.get(`/logs/history/${userId}`, { params: { limit } });
+      // Backend returns { success, data: [...], message, error }
+      const historyData = response.data?.data || response.data || [];
+      return { success: true, data: Array.isArray(historyData) ? historyData : [] };
+    } catch (error: any) {
+      console.error('Get log history failed, using mock:', error.response?.data || error.message);
       return { success: true, data: generateMockHistory(limit) };
     }
   },
 
-  // Get Trigger Analysis
+  // Get Recent Logs - GET /api/v1/logs/recent/{user_id}
+  async getRecentLogs(userId: string, limit: number = 7): Promise<ApiResponse<DailyLogEntry[]>> {
+    try {
+      const response = await api.get(`/logs/recent/${userId}`, { params: { limit } });
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      console.error('Get recent logs failed:', error.response?.data || error.message);
+      return { success: true, data: generateMockHistory(limit) };
+    }
+  },
+
+  // Get Trigger Analysis - GET /api/v1/insights/triggers/{user_id}
   async getTriggerAnalysis(userId: string): Promise<ApiResponse<TriggerAnalysis>> {
     try {
-      const response = await api.get(`/analysis/triggers/${userId}`);
-      return { success: true, data: response.data };
-    } catch (error) {
-      // Mock trigger analysis
+      const response = await api.get(`/insights/triggers/${userId}`);
+      const triggerData = response.data?.data || response.data;
+      return { success: true, data: triggerData };
+    } catch (error: any) {
+      console.error('Get trigger analysis failed:', error.response?.data || error.message);
       return {
         success: true,
         data: {
-          total_logs: 45,
-          triggers: [
-            {
-              name: 'Sleep Deficit',
-              occurrence_rate: 0.42,
-              occurrences: 19,
-              attack_correlation: 0.68,
-              odds_ratio: 3.98,
-              contribution: 0.35,
-              confidence_interval: [2.1, 5.8] as [number, number],
-              trend: 'stable' as const,
-              personalized_threshold: 5.5,
-              icon: '😴',
-              description: 'Less than 6 hours of sleep significantly increases risk'
-            },
-            {
-              name: 'High Stress',
-              occurrence_rate: 0.55,
-              occurrences: 25,
-              attack_correlation: 0.45,
-              odds_ratio: 1.92,
-              contribution: 0.25,
-              confidence_interval: [1.3, 2.8] as [number, number],
-              trend: 'decreasing' as const,
-              icon: '😰',
-              description: 'Stress level above 7 correlates with attacks'
-            },
-            {
-              name: 'Weather Change',
-              occurrence_rate: 0.31,
-              occurrences: 14,
-              attack_correlation: 0.52,
-              odds_ratio: 1.27,
-              contribution: 0.18,
-              confidence_interval: [0.9, 1.7] as [number, number],
-              trend: 'stable' as const,
-              icon: '🌡️',
-              description: 'Barometric pressure drops trigger attacks'
-            },
-            {
-              name: 'Menstrual Phase',
-              occurrence_rate: 0.07,
-              occurrences: 3,
-              attack_correlation: 0.78,
-              odds_ratio: 2.04,
-              contribution: 0.15,
-              confidence_interval: [1.5, 2.8] as [number, number],
-              trend: 'stable' as const,
-              icon: '📅',
-              description: 'Days -2 to +3 of cycle carry 85% higher risk'
-            },
-            {
-              name: 'Alcohol',
-              occurrence_rate: 0.05,
-              occurrences: 2,
-              attack_correlation: 0.62,
-              odds_ratio: 2.08,
-              contribution: 0.07,
-              confidence_interval: [1.4, 3.1] as [number, number],
-              trend: 'decreasing' as const,
-              icon: '🍷',
-              description: '5+ drinks significantly increases risk'
-            }
-          ],
-          patterns: [
-            {
-              title: 'Weekend Sleep Pattern',
-              description: 'You tend to sleep less on Friday nights, followed by migraines on Saturday',
-              icon: '📊',
-              confidence: 0.82
-            },
-            {
-              title: 'Stress-Weather Combination',
-              description: 'High stress combined with weather changes doubles your risk',
-              icon: '⚡',
-              confidence: 0.75
-            },
-            {
-              title: 'Protective Snacking',
-              description: 'Days with regular snacks show 40% lower migraine occurrence',
-              icon: '🍎',
-              confidence: 0.68
-            }
-          ]
+          total_logs: 0,
+          triggers: [],
+          patterns: []
         }
       };
     }
   },
 
-  // Get Weekly Stats
+  // Get Weekly Stats - GET /api/v1/insights/weekly-stats/{user_id}
   async getWeeklyStats(userId: string): Promise<ApiResponse<WeeklyStats>> {
     try {
-      const response = await api.get(`/stats/weekly/${userId}`);
-      return { success: true, data: response.data };
-    } catch (error) {
+      const response = await api.get(`/insights/weekly-stats/${userId}`);
+      const statsData = response.data?.data || response.data;
+      return { success: true, data: statsData };
+    } catch (error: any) {
+      console.error('Get weekly stats failed:', error.response?.data || error.message);
       return {
         success: true,
         data: {
-          week_start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          total_attacks: Math.floor(Math.random() * 3),
-          total_migraines: Math.floor(Math.random() * 3) + 1,
-          avg_severity: 6.5 + Math.random() * 2,
-          prediction_accuracy: 0.75 + Math.random() * 0.15,
-          most_common_triggers: ['Sleep Deficit', 'Weather Change', 'Stress'],
-          improvement_from_last_week: Math.random() * 20 - 10,
-          streak_days: Math.floor(Math.random() * 30) + 5,
-          weekly_accuracy: [
-            { week: 'Week 1', accuracy: 62 },
-            { week: 'Week 2', accuracy: 68 },
-            { week: 'Week 3', accuracy: 71 },
-            { week: 'Week 4', accuracy: 75 },
-            { week: 'Week 5', accuracy: 78 },
-            { week: 'Week 6', accuracy: 80 },
-          ]
+          week_start: new Date().toISOString().split('T')[0],
+          total_attacks: 0,
+          total_migraines: 0,
+          avg_severity: 0,
+          prediction_accuracy: 0,
+          most_common_triggers: [],
+          improvement_from_last_week: 0,
+          streak_days: 0,
+          weekly_accuracy: []
         }
       };
     }
   },
 
-  // Update yesterday's outcome
-  async updateOutcome(userId: string, date: string, migraineOccurred: boolean, details?: any): Promise<ApiResponse<{ success: boolean }>> {
+  // Get Insights Summary - GET /api/v1/insights/summary/{user_id}
+  async getInsightsSummary(userId: string): Promise<ApiResponse<any>> {
     try {
-      const response = await api.put(`/logs/${userId}/${date}/outcome`, {
+      const response = await api.get(`/insights/summary/${userId}`);
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      console.error('Get insights summary failed:', error.response?.data || error.message);
+      return { success: true, data: {} };
+    }
+  },
+
+  // Get Recommendations - GET /api/v1/insights/recommendations/{user_id}
+  async getRecommendations(userId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await api.get(`/insights/recommendations/${userId}`);
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      console.error('Get recommendations failed:', error.response?.data || error.message);
+      return { success: true, data: [] };
+    }
+  },
+
+  // Update Migraine Outcome - PUT /api/v1/logs/outcome/{user_id}/{date_str}
+  async updateOutcome(
+    userId: string, 
+    date: string, 
+    migraineOccurred: boolean, 
+    details?: any
+  ): Promise<ApiResponse<{ success: boolean }>> {
+    try {
+      const response = await api.put(`/logs/outcome/${userId}/${date}`, {
         migraine_occurred: migraineOccurred,
-        details
+        ...details
       });
       return { success: true, data: response.data };
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Update outcome failed:', error.response?.data || error.message);
       return { success: true, data: { success: true } };
     }
-  }
+  },
+
+  // Get Prediction History - GET /api/v1/predictions/history/{user_id}
+  async getPredictionHistory(userId: string, limit: number = 30): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await api.get(`/predictions/history/${userId}`, { params: { limit } });
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      console.error('Get prediction history failed:', error.response?.data || error.message);
+      return { success: true, data: [] };
+    }
+  },
+
+  // Get Prediction Accuracy - GET /api/v1/predictions/accuracy/{user_id}
+  async getPredictionAccuracy(userId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await api.get(`/predictions/accuracy/${userId}`);
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      console.error('Get prediction accuracy failed:', error.response?.data || error.message);
+      return { success: true, data: { accuracy: 0 } };
+    }
+  },
 };
 
 export default api;
