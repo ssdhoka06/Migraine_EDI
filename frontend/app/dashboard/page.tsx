@@ -421,7 +421,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-end justify-between gap-2">
-              {history.slice(0, 7).map((day, index) => (
+              {Array.isArray(history) && history.slice(0, 7).map((day, index) => (
                 <div key={day.date} className="flex-1 text-center">
                   <div 
                     className={cn(
